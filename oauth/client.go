@@ -25,6 +25,7 @@ import (
 )
 
 const (
+	clientCredentialsEndpoint  = "/oauth2/token"
 	clientCredentialsGrantType = "client_credentials"
 )
 
@@ -42,8 +43,8 @@ type oauth2Response struct {
 }
 
 // New returns an oauth2.Client configured using the provided client and endpoint.
-// The client will use the httpclient's configured BaseURIs and append the clientCredentialEndpoint to the request.
-func New(client httpclient.Client, clientCredentialEndpoint string) (Client, error) {
+// The client will use the httpclient's configured BaseURIs.
+func New(client httpclient.Client) (Client, error) {
 	return &serviceClient{
 		client: client,
 	}, nil
@@ -58,8 +59,8 @@ func (s *serviceClient) CreateClientCredentialToken(ctx context.Context, clientI
 	var oauth2Resp oauth2Response
 	_, err := s.client.Do(ctx,
 		httpclient.WithRPCMethodName("CreateClientCredentialToken"),
-		httpclient.WithPath(s.clientCredentialEndpoint),
 		httpclient.WithRequestMethod(http.MethodPost),
+		httpclient.WithPath(clientCredentialsEndpoint),
 		httpclient.WithRequestBody(urlValues, codecs.FormURLEncoded),
 		httpclient.WithJSONResponse(&oauth2Resp),
 	)
