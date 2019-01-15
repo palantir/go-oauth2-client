@@ -1,0 +1,13 @@
+# Idea
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# Godel output
+/conjure/build/
+/docker/inputs/
+/out/
+
+# Do not ignore vendored code
+!vendor/**

@@ -1,0 +1,28 @@
+owner-repo: &owner-repo
+  owner-repo: palantir/go-oauth2-client
+
+version: 2.1
+
+orbs:
+  go: palantir/go@0.0.5
+  godel: palantir/godel@0.0.2
+
+workflows:
+  version: 2
+  verify-test:
+    jobs:
+      - godel/verify:
+          name: verify
+          executor:
+            name: go/golang-1_11
+            <<: *owner-repo
+      - godel/test:
+          name: test-go-1.11
+          executor:
+            name: go/golang-1_11
+            <<: *owner-repo
+      - godel/test:
+          name: test-go-1.10
+          executor:
+            name: go/golang-1_10
+            <<: *owner-repo

@@ -1,0 +1,5 @@
+mockery:
+- name: Client
+  output: ./mocks
+  dir: ./oauth
+  case: underscore
