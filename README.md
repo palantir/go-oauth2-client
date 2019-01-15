@@ -1,5 +1,7 @@
 # go-oauth-client
 
+[![CircleCI](https://circleci.com/gh/palantir/go-oauth2-client/tree/develop.svg?style=svg)](https://circleci.com/gh/palantir/go-oauth2-client/tree/develop) [![](https://godoc.org/github.com/palantir/go-oauth2-client?status.svg)](http://godoc.org/github.com/palantir/go-oauth2-client)
+
 A golang client for requesting client credentials from an OAuth2 server. See the [OAuth2 client_credentials specification](https://www.oauth.com/oauth2-servers/access-tokens/client-credentials/#parameters) for details.
 
 ## License
