@@ -44,10 +44,10 @@ type oauth2Response struct {
 
 // New returns an oauth2.Client configured using the provided client and endpoint.
 // The client will use the httpclient's configured BaseURIs.
-func New(client httpclient.Client) (Client, error) {
+func New(client httpclient.Client) Client {
 	return &serviceClient{
 		client: client,
-	}, nil
+	}
 }
 
 func (s *serviceClient) CreateClientCredentialToken(ctx context.Context, clientID, clientSecret string) (string, error) {
