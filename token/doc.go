@@ -12,5 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// Package oauth provides a client for requesting a client_credentials token from an OAuth2 server.
-package oauth
+// Package token provides utilities for retrieving and refreshing client_credentials tokens
+// using an oauth.Client.
+package token
