@@ -18,7 +18,7 @@ import (
 	"context"
 )
 
-// Client returns a client_credentials token
-type Client interface {
+// ClientCredentialClient returns a client_credentials token
+type ClientCredentialClient interface {
 	CreateClientCredentialToken(ctx context.Context, clientID, clientSecret string) (string, error)
 }

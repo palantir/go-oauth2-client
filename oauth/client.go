@@ -42,9 +42,9 @@ type oauth2Response struct {
 	AccessToken  string `json:"access_token"`
 }
 
-// New returns an oauth2.Client configured using the provided client and endpoint.
+// NewClientCredentialClient returns an oauth2.Client configured using the provided client.
 // The client will use the httpclient's configured BaseURIs.
-func New(client httpclient.Client) Client {
+func NewClientCredentialClient(client httpclient.Client) ClientCredentialClient {
 	return &serviceClient{
 		client: client,
 	}
