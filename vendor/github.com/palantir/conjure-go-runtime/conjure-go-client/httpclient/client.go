@@ -20,11 +20,11 @@ import (
 	"net/http"
 	"net/url"
 
+	"github.com/palantir/conjure-go-runtime/conjure-go-client/httpclient/internal"
 	"github.com/palantir/pkg/bytesbuffers"
 	"github.com/palantir/pkg/retry"
-	"github.com/palantir/witchcraft-go-error"
-
-	"github.com/palantir/conjure-go-runtime/conjure-go-client/httpclient/internal"
+	werror "github.com/palantir/witchcraft-go-error"
+	"github.com/palantir/witchcraft-go-tracing/wtracing"
 )
 
 // A Client executes requests to a configured service.
@@ -36,8 +36,9 @@ type Client interface {
 	// Use the WithResponse* params to unmarshal the body before Do() returns.
 	//
 	// In the case of a response with StatusCode >= 400, Do() will return a nil response and a non-nil error.
-	// Use StatusCodeFromError(err) to retrieve the code from the error
-	// and WithDisableRestErrors() to disable this middleware on your client.
+	// Use StatusCodeFromError(err) to retrieve the code from the error.
+	// Use WithDisableRestErrors() to disable this middleware on your client.
+	// Use WithErrorDecoder(errorDecoder) to replace this default behavior with custom error decoding behavior.
 	Do(ctx context.Context, params ...RequestParam) (*http.Response, error)
 
 	Get(ctx context.Context, params ...RequestParam) (*http.Response, error)
@@ -48,8 +49,10 @@ type Client interface {
 }
 
 type clientImpl struct {
-	client      http.Client
-	middlewares []Middleware
+	client                 http.Client
+	middlewares            []Middleware
+	errorDecoderMiddleware Middleware
+	metricsMiddleware      Middleware
 
 	uris                          []string
 	maxRetries                    int
@@ -80,6 +83,9 @@ func (c *clientImpl) Delete(ctx context.Context, params ...RequestParam) (*http.
 
 func (c *clientImpl) Do(ctx context.Context, params ...RequestParam) (*http.Response, error) {
 	uris := c.uris
+	if len(uris) == 0 {
+		return nil, werror.Error("no base URIs are configured")
+	}
 	offset := rand.Intn(len(uris))
 
 	var err error
@@ -93,24 +99,24 @@ func (c *clientImpl) Do(ctx context.Context, params ...RequestParam) (*http.Resp
 		resp, err = c.doOnce(ctx, nextURI, params...)
 		if resp == nil {
 			// If we get a nil response, we can assume there is a problem with host and can move on to the next.
-			nextURI = nextURIOrBackoff(nextURI, uris, offset, failedURIs, retrier)
+			nextURI, offset = nextURIOrBackoff(nextURI, uris, offset, failedURIs, retrier)
 		} else if shouldThrottle, _ := internal.IsThrottleResponse(resp); shouldThrottle {
 			// 429: throttle
 			// Ideally we should avoid hitting this URI until it's next available. In the interest of avoiding
 			// complex state in the client that will be replaced with a service-mesh, we will simply move on to the next
 			// available URI
-			nextURI = nextURIOrBackoff(nextURI, uris, offset, failedURIs, retrier)
+			nextURI, offset = nextURIOrBackoff(nextURI, uris, offset, failedURIs, retrier)
 		} else if shouldTryOther, otherURI := internal.IsRetryOtherResponse(resp); shouldTryOther {
 			// 308: go to next node, or particular node if provided.
 			if otherURI != nil {
 				nextURI = otherURI.String()
 				retrier.Reset()
 			} else {
-				nextURI = nextURIOrBackoff(nextURI, uris, offset, failedURIs, retrier)
+				nextURI, offset = nextURIOrBackoff(nextURI, uris, offset, failedURIs, retrier)
 			}
 		} else if internal.IsUnavailableResponse(resp) {
 			// 503: go to next node
-			nextURI = nextURIOrBackoff(nextURI, uris, offset, failedURIs, retrier)
+			nextURI, offset = nextURIOrBackoff(nextURI, uris, offset, failedURIs, retrier)
 		} else {
 			// The response was not a failure in any way, return the error
 			return resp, err
@@ -123,42 +129,92 @@ func (c *clientImpl) Do(ctx context.Context, params ...RequestParam) (*http.Resp
 }
 
 // If lastURI was already marked failed, we perform a backoff as determined by the retrier.
-// Otherwise, we add lastURI to failedURIs and return the next URI immediately.
-func nextURIOrBackoff(lastURI string, uris []string, offset int, failedURIs map[string]struct{}, retrier retry.Retrier) string {
+// Otherwise, we add lastURI to failedURIs and return the next URI and its offset immediately
+func nextURIOrBackoff(lastURI string, uris []string, offset int, failedURIs map[string]struct{}, retrier retry.Retrier) (nextURI string, nextURIOffset int) {
 	_, performBackoff := failedURIs[lastURI]
 	failedURIs[lastURI] = struct{}{}
-	nextURI := uris[(offset+1)%len(uris)]
+	nextURIOffset = (offset + 1) % len(uris)
+	nextURI = uris[nextURIOffset]
 	// If the URI has failed before, perform a backoff
 	if performBackoff {
 		retrier.Next()
 	}
-	return nextURI
+	return nextURI, nextURIOffset
 }
 
 func (c *clientImpl) doOnce(ctx context.Context, baseURI string, params ...RequestParam) (*http.Response, error) {
-	req, reqMiddlewares, err := c.newRequest(ctx, baseURI, params...)
-	if err != nil {
-		return nil, err
+
+	// 1. create the request
+	b := &requestBuilder{
+		headers:        c.initializeRequestHeaders(ctx),
+		query:          make(url.Values),
+		bodyMiddleware: &bodyMiddleware{bufferPool: c.bufferPool},
 	}
 
+	for _, p := range params {
+		if p == nil {
+			continue
+		}
+		if err := p.apply(b); err != nil {
+			return nil, err
+		}
+	}
+	for _, c := range b.configureCtx {
+		ctx = c(ctx)
+	}
+
+	if b.method == "" {
+		return nil, werror.Error("httpclient: use WithRequestMethod() to specify HTTP method")
+	}
+
+	req, err := http.NewRequest(b.method, baseURI+b.path, nil)
+	if err != nil {
+		return nil, werror.Wrap(err, "failed to build new HTTP request")
+	}
+	req = req.WithContext(ctx)
+	req.Header = b.headers
+	if q := b.query.Encode(); q != "" {
+		req.URL.RawQuery = q
+	}
+
+	// 2. create the transport and client
 	// shallow copy so we can overwrite the Transport with a wrapped one.
 	clientCopy := c.client
-	transport := clientCopy.Transport
+	transport := clientCopy.Transport // start with the concrete http.Transport from the client
 
-	for _, middleware := range reqMiddlewares {
-		m := middleware
-		transport = wrapTransport(transport, m)
+	middlewares := []Middleware{
+		// must precede the error decoders because they return a nil response and the metrics need the status code of
+		// the raw response.
+		c.metricsMiddleware,
+		// must precede the client error decoder
+		b.errorDecoderMiddleware,
+		// must precede the body middleware so it can read the response body
+		c.errorDecoderMiddleware,
+		b.bodyMiddleware,
+	}
+	middlewares = append(middlewares, c.middlewares...)
+	for _, middleware := range middlewares {
+		if middleware != nil {
+			transport = wrapTransport(transport, middleware)
+		}
 	}
 	clientCopy.Transport = transport
 
+	// 3. execute the request using the client to get and handle the response
 	resp, respErr := clientCopy.Do(req)
+
+	// unless this is exactly the scenario where the caller has opted into being responsible for draining and closing
+	// the response body, be sure to do so here.
+	if !(respErr == nil && b.bodyMiddleware.rawOutput) {
+		internal.DrainBody(resp)
+	}
 
 	return resp, unwrapURLError(respErr)
 }
 
 // unwrapURLError converts a *url.Error to a werror. We need this because all
 // errors from the stdlib's client.Do are wrapped in *url.Error, and if we
-// were to blindly return that we would lose any zerror params stored on the
+// were to blindly return that we would lose any werror params stored on the
 // underlying Err.
 func unwrapURLError(respErr error) error {
 	if respErr == nil {
@@ -179,4 +235,15 @@ func unwrapURLError(respErr error) error {
 	}
 
 	return werror.Wrap(urlErr.Err, "httpclient request failed", params...)
+}
+
+func (c *clientImpl) initializeRequestHeaders(ctx context.Context) http.Header {
+	headers := make(http.Header)
+	if !c.disableTraceHeaderPropagation {
+		traceID := wtracing.TraceIDFromContext(ctx)
+		if traceID != "" {
+			headers.Set(traceIDHeaderKey, string(traceID))
+		}
+	}
+	return headers
 }

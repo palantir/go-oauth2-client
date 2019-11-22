@@ -25,8 +25,9 @@ import (
 	"github.com/palantir/pkg/bytesbuffers"
 	"github.com/palantir/pkg/retry"
 	"github.com/palantir/pkg/tlsconfig"
-	"github.com/palantir/witchcraft-go-error"
+	werror "github.com/palantir/witchcraft-go-error"
 	"golang.org/x/net/http2"
+	"golang.org/x/net/proxy"
 )
 
 type clientBuilder struct {
@@ -36,7 +37,7 @@ type clientBuilder struct {
 	maxRetries     int
 	backoffOptions []retry.Option
 
-	disableRestErrors             bool
+	errorDecoder                  ErrorDecoder
 	disableTraceHeaderPropagation bool
 }
 
@@ -44,17 +45,23 @@ type httpClientBuilder struct {
 	ServiceName string
 
 	// http.Client modifiers
-	Timeout     time.Duration
-	Middlewares []Middleware
+	Timeout           time.Duration
+	Middlewares       []Middleware
+	metricsMiddleware Middleware
 
 	// http.Transport modifiers
-	MaxIdleConns        int
-	MaxIdleConnsPerHost int
-	Proxy               func(*http.Request) (*url.URL, error)
-	TLSClientConfig     *tls.Config
-	DisableHTTP2        bool
-	DisableRecovery     bool
-	DisableTracing      bool
+	MaxIdleConns          int
+	MaxIdleConnsPerHost   int
+	Proxy                 func(*http.Request) (*url.URL, error)
+	ProxyDialerBuilder    func(*net.Dialer) (proxy.Dialer, error)
+	TLSClientConfig       *tls.Config
+	DisableHTTP2          bool
+	DisableRecovery       bool
+	DisableTracing        bool
+	IdleConnTimeout       time.Duration
+	TLSHandshakeTimeout   time.Duration
+	ExpectContinueTimeout time.Duration
+	ResponseHeaderTimeout time.Duration
 
 	// http.Dialer modifiers
 	DialTimeout time.Duration
@@ -70,6 +77,7 @@ func NewClient(params ...ClientParam) (Client, error) {
 	b := &clientBuilder{
 		httpClientBuilder: *getDefaultHTTPClientBuilder(),
 		backoffOptions:    []retry.Option{retry.WithInitialBackoff(250 * time.Millisecond)},
+		errorDecoder:      restErrorDecoder{},
 	}
 	for _, p := range params {
 		if p == nil {
@@ -83,16 +91,13 @@ func NewClient(params ...ClientParam) (Client, error) {
 	if err != nil {
 		return nil, err
 	}
-	if !b.disableRestErrors {
-		middlewares = append(middlewares, &errorMiddleware{})
+	var edm Middleware
+	if b.errorDecoder != nil {
+		edm = errorDecoderMiddleware(b.errorDecoder)
 	}
 
 	if b.maxRetries == 0 {
 		b.maxRetries = 2 * len(b.uris)
-	}
-
-	for _, middleware := range middlewares {
-		client.Transport = wrapTransport(client.Transport, middleware)
 	}
 	return &clientImpl{
 		client:                        *client,
@@ -100,20 +105,27 @@ func NewClient(params ...ClientParam) (Client, error) {
 		maxRetries:                    b.maxRetries,
 		backoffOptions:                b.backoffOptions,
 		disableTraceHeaderPropagation: b.disableTraceHeaderPropagation,
+		middlewares:                   middlewares,
+		metricsMiddleware:             b.metricsMiddleware,
+		errorDecoderMiddleware:        edm,
 	}, nil
 }
 
 func getDefaultHTTPClientBuilder() *httpClientBuilder {
 	defaultTLSConfig, _ := tlsconfig.NewClientConfig()
 	return &httpClientBuilder{
-		TLSClientConfig:     defaultTLSConfig,
-		Timeout:             1 * time.Minute,
-		DialTimeout:         30 * time.Second,
-		KeepAlive:           30 * time.Second,
-		MaxIdleConns:        32,
-		MaxIdleConnsPerHost: 32,
-		EnableIPV6:          false,
-		DisableHTTP2:        false,
+		// These values are primarily pulled from http.DefaultTransport.
+		TLSClientConfig:       defaultTLSConfig,
+		Timeout:               1 * time.Minute,
+		DialTimeout:           30 * time.Second,
+		KeepAlive:             30 * time.Second,
+		MaxIdleConns:          32,
+		MaxIdleConnsPerHost:   32,
+		EnableIPV6:            false,
+		DisableHTTP2:          false,
+		IdleConnTimeout:       90 * time.Second,
+		TLSHandshakeTimeout:   10 * time.Second,
+		ExpectContinueTimeout: 1 * time.Second,
 	}
 }
 
@@ -133,6 +145,9 @@ func NewHTTPClient(params ...HTTPClientParam) (*http.Client, error) {
 	if err != nil {
 		return nil, err
 	}
+	if b.metricsMiddleware != nil {
+		client.Transport = wrapTransport(client.Transport, b.metricsMiddleware)
+	}
 	for _, handler := range roundTrippers {
 		client.Transport = wrapTransport(client.Transport, handler)
 	}
@@ -140,19 +155,32 @@ func NewHTTPClient(params ...HTTPClientParam) (*http.Client, error) {
 }
 
 func httpClientAndRoundTripHandlersFromBuilder(b *httpClientBuilder) (*http.Client, []Middleware, error) {
+	dialer := &net.Dialer{
+		Timeout:   b.DialTimeout,
+		KeepAlive: b.KeepAlive,
+		DualStack: b.EnableIPV6,
+	}
 	transport := &http.Transport{
-		DialContext: (&net.Dialer{
-			Timeout:   b.DialTimeout,
-			KeepAlive: b.KeepAlive,
-			DualStack: b.EnableIPV6,
-		}).DialContext,
+		DialContext:           dialer.DialContext,
 		MaxIdleConns:          b.MaxIdleConns,
 		MaxIdleConnsPerHost:   b.MaxIdleConnsPerHost,
 		Proxy:                 b.Proxy,
 		TLSClientConfig:       b.TLSClientConfig,
-		ExpectContinueTimeout: http.DefaultTransport.(*http.Transport).ExpectContinueTimeout,
-		IdleConnTimeout:       http.DefaultTransport.(*http.Transport).IdleConnTimeout,
-		TLSHandshakeTimeout:   http.DefaultTransport.(*http.Transport).TLSHandshakeTimeout,
+		ExpectContinueTimeout: b.ExpectContinueTimeout,
+		IdleConnTimeout:       b.IdleConnTimeout,
+		TLSHandshakeTimeout:   b.TLSHandshakeTimeout,
+		ResponseHeaderTimeout: b.ResponseHeaderTimeout,
+	}
+	if b.ProxyDialerBuilder != nil {
+		// Used for socks5 proxying
+		// TODO: use DialContext if x/proxy ever supports it
+		proxyDialer, err := b.ProxyDialerBuilder(dialer)
+		if err != nil {
+			return nil, nil, err
+		}
+		transport.Dial = proxyDialer.Dial
+		transport.DialContext = nil
+		transport.Proxy = nil
 	}
 	if !b.DisableHTTP2 {
 		if err := http2.ConfigureTransport(transport); err != nil {

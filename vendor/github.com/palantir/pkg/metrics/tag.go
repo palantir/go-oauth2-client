@@ -16,6 +16,8 @@ import (
 type Tag struct {
 	key   string
 	value string
+	// Store the concatenated key and value so we don't need to reconstruct it in String() (used in toMetricTagID)
+	keyValue string
 }
 
 func (t Tag) Key() string {
@@ -28,7 +30,7 @@ func (t Tag) Value() string {
 
 // The full representation of the tag, which is "key:value".
 func (t Tag) String() string {
-	return t.key + ":" + t.value
+	return t.keyValue
 }
 
 type Tags []Tag
@@ -52,6 +54,18 @@ func (t Tags) ToMap() map[string]string {
 	return tags
 }
 
+func (t Tags) Len() int {
+	return len(t)
+}
+
+func (t Tags) Less(i, j int) bool {
+	return t[i].keyValue < t[j].keyValue
+}
+
+func (t Tags) Swap(i, j int) {
+	t[i], t[j] = t[j], t[i]
+}
+
 // MustNewTag returns the result of calling NewTag, but panics if NewTag returns an error. Should only be used in
 // instances where the inputs are statically defined and known to be valid.
 func MustNewTag(k, v string) Tag {
@@ -60,6 +74,18 @@ func MustNewTag(k, v string) Tag {
 		panic(err)
 	}
 	return t
+}
+
+// NewTagWithFallbackValue returns the result of calling NewTag, and if that fails, calls MustNewTag with a fallback
+// value. This function is useful when the value is provided as a runtime input and the desired behavior is to fall back
+// to using a known valid value (e.g., "unknown") when the value is invalid. Note: because MustNewTag will panic if it
+// fails, both the key and fallback value must be known valid.
+func NewTagWithFallbackValue(k, v, fallback string) Tag {
+	tag, err := NewTag(k, v)
+	if err != nil {
+		return MustNewTag(k, fallback)
+	}
+	return tag
 }
 
 // NewTag returns a tag that uses the provided key and value. The returned tag is normalized to conform with the DataDog
@@ -89,10 +115,17 @@ func NewTag(k, v string) (Tag, error) {
 		return Tag{}, errors.New(`full tag ("key:value") must be <= 200 characters`)
 	}
 
+	return newTag(k, v), nil
+}
+
+func newTag(k, v string) Tag {
+	normalizedKey := normalizeTag(k)
+	normalizedValue := normalizeTag(v)
 	return Tag{
-		key:   normalizeTag(k),
-		value: normalizeTag(v),
-	}, nil
+		key:      normalizedKey,
+		value:    normalizedValue,
+		keyValue: normalizedKey + ":" + normalizedValue,
+	}
 }
 
 // MustNewTags returns the result of calling NewTags, but panics if NewTags returns an error. Should only be used in
