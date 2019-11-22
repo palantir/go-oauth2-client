@@ -18,7 +18,7 @@ import (
 	"context"
 
 	"github.com/palantir/pkg/retry"
-	"github.com/palantir/witchcraft-go-error"
+	werror "github.com/palantir/witchcraft-go-error"
 	"github.com/palantir/witchcraft-go-logging/wlog/svclog/svc1log"
 )
 

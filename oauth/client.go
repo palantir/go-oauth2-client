@@ -21,7 +21,7 @@ import (
 
 	"github.com/palantir/conjure-go-runtime/conjure-go-client/httpclient"
 	"github.com/palantir/conjure-go-runtime/conjure-go-contract/codecs"
-	"github.com/palantir/witchcraft-go-error"
+	werror "github.com/palantir/witchcraft-go-error"
 )
 
 const (
