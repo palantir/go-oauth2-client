@@ -1,7 +1,0 @@
-auto-label:
-  names:
-    versions-props/upgrade-all: [ "merge when ready" ]
-    excavator/manage-circleci: [ "merge when ready" ]
-  tags:
-    roomba: [ "merge when ready" ]
-    swiffer: [ "merge when ready" ]
