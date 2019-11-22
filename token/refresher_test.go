@@ -20,12 +20,11 @@ import (
 	"testing"
 	"time"
 
+	"github.com/palantir/go-oauth2-client/token"
 	"github.com/palantir/pkg/retry"
 	werror "github.com/palantir/witchcraft-go-error"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-
-	"github.com/palantir/go-oauth2-client/token"
 )
 
 func TestRefresher_Run(t *testing.T) {

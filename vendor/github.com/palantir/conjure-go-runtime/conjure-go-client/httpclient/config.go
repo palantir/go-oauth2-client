@@ -22,7 +22,7 @@ import (
 
 	"github.com/palantir/pkg/metrics"
 	"github.com/palantir/pkg/tlsconfig"
-	"github.com/palantir/witchcraft-go-error"
+	werror "github.com/palantir/witchcraft-go-error"
 )
 
 // ServicesConfig is the top-level configuration struct for all HTTP clients. It supports
@@ -53,7 +53,9 @@ type ClientConfig struct {
 	DisableHTTP2 *bool `json:"disable-http2,omitempty" yaml:"disable-http2,omitempty"`
 	// ProxyFromEnvironment enables reading HTTP proxy information from environment variables.
 	// See 'http.ProxyFromEnvironment' documentation for specific behavior.
-	ProxyFromEnvironment bool `json:"proxy-from-environment,omitempty" yaml:"proxy-from-environment,omitempty"`
+	ProxyFromEnvironment *bool `json:"proxy-from-environment,omitempty" yaml:"proxy-from-environment,omitempty"`
+	// ProxyURL uses the provided URL for proxying the request. Schemes http, https, and socks5 are supported.
+	ProxyURL *string `json:"proxy-url,omitempty" yaml:"proxy-url,omitempty"`
 
 	// MaxNumRetries controls the number of times the client will retry retryable failures.
 	// If unset, this defaults to twice the number of URIs provided.
@@ -71,6 +73,13 @@ type ClientConfig struct {
 	// WriteTimeout is the maximum timeout for mutating requests.
 	// NOTE: The current implementation uses the max(ReadTimeout, WriteTimeout) to set the http.Client timeout value.
 	WriteTimeout *time.Duration `json:"write-timeout,omitempty" yaml:"write-timeout,omitempty"`
+	// IdleConnTimeout sets the timeout for idle connections.
+	IdleConnTimeout *time.Duration `json:"idle-conn-timeout,omitempty" yaml:"idle-conn-timeout,omitempty"`
+	// TLSHandshakeTimeout sets the timeout for TLS handshakes
+	TLSHandshakeTimeout *time.Duration `json:"tls-handshake-timeout,omitempty" yaml:"tls-handshake-timeout,omitempty"`
+	// IdleConnTimeout sets the timeout to receive the server's first response headers after
+	// fully writing the request headers if the request has an "Expect: 100-continue" header.
+	ExpectContinueTimeout *time.Duration `json:"expect-continue-timeout,omitempty" yaml:"expect-continue-timeout,omitempty"`
 
 	// Metrics allows disabling metric emission or adding additional static tags to the client metrics.
 	Metrics MetricsConfig `json:"metrics,omitempty" yaml:"metrics,omitempty"`
@@ -130,6 +139,15 @@ func (c ServicesConfig) ClientConfig(serviceName string) ClientConfig {
 	if conf.WriteTimeout == nil && c.Default.WriteTimeout != nil {
 		conf.WriteTimeout = c.Default.WriteTimeout
 	}
+	if conf.IdleConnTimeout == nil && c.Default.IdleConnTimeout != nil {
+		conf.IdleConnTimeout = c.Default.IdleConnTimeout
+	}
+	if conf.TLSHandshakeTimeout == nil && c.Default.TLSHandshakeTimeout != nil {
+		conf.TLSHandshakeTimeout = c.Default.TLSHandshakeTimeout
+	}
+	if conf.ExpectContinueTimeout == nil && c.Default.ExpectContinueTimeout != nil {
+		conf.ExpectContinueTimeout = c.Default.ExpectContinueTimeout
+	}
 	if conf.Metrics.Enabled == nil && c.Default.Metrics.Enabled != nil {
 		conf.Metrics.Enabled = c.Default.Metrics.Enabled
 	}
@@ -141,6 +159,12 @@ func (c ServicesConfig) ClientConfig(serviceName string) ClientConfig {
 	}
 	if conf.DisableHTTP2 == nil && c.Default.DisableHTTP2 != nil {
 		conf.DisableHTTP2 = c.Default.DisableHTTP2
+	}
+	if conf.ProxyFromEnvironment == nil && c.Default.ProxyFromEnvironment != nil {
+		conf.ProxyFromEnvironment = c.Default.ProxyFromEnvironment
+	}
+	if conf.ProxyURL == nil && c.Default.ProxyURL != nil {
+		conf.ProxyURL = c.Default.ProxyURL
 	}
 
 	if len(c.Default.Metrics.Tags) != 0 {
@@ -220,14 +244,26 @@ func configToParams(c ClientConfig) ([]ClientParam, error) {
 
 	// Proxy
 
-	if c.ProxyFromEnvironment {
+	if c.ProxyFromEnvironment != nil && *c.ProxyFromEnvironment {
 		params = append(params, WithProxyFromEnvironment())
+	}
+	if c.ProxyURL != nil {
+		params = append(params, WithProxyURL(*c.ProxyURL))
 	}
 
 	// Timeouts
 
 	if c.ConnectTimeout != nil && *c.ConnectTimeout != 0 {
 		params = append(params, WithDialTimeout(*c.ConnectTimeout))
+	}
+	if c.IdleConnTimeout != nil && *c.IdleConnTimeout != 0 {
+		params = append(params, WithIdleConnTimeout(*c.IdleConnTimeout))
+	}
+	if c.TLSHandshakeTimeout != nil && *c.TLSHandshakeTimeout != 0 {
+		params = append(params, WithTLSHandshakeTimeout(*c.TLSHandshakeTimeout))
+	}
+	if c.ExpectContinueTimeout != nil && *c.ExpectContinueTimeout != 0 {
+		params = append(params, WithExpectContinueTimeout(*c.ExpectContinueTimeout))
 	}
 
 	// N.B. we only have one timeout field (not based on method) so just take the max of read and write for now.

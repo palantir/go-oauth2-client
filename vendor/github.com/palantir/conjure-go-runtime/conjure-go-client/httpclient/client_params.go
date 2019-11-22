@@ -17,12 +17,16 @@ package httpclient
 import (
 	"context"
 	"crypto/tls"
+	"encoding/base64"
+	"net"
 	"net/http"
+	"net/url"
 	"time"
 
 	"github.com/palantir/pkg/bytesbuffers"
 	"github.com/palantir/pkg/retry"
-	"github.com/palantir/witchcraft-go-error"
+	werror "github.com/palantir/witchcraft-go-error"
+	"golang.org/x/net/proxy"
 )
 
 // ClientParam is a param that can be used to build
@@ -158,7 +162,7 @@ func WithMetrics(tagProviders ...TagsProvider) ClientOrHTTPClientParam {
 		if err != nil {
 			return err
 		}
-		b.Middlewares = append(b.Middlewares, m)
+		b.metricsMiddleware = m
 		return nil
 	})
 }
@@ -173,7 +177,7 @@ func WithBytesBufferPool(pool bytesbuffers.Pool) ClientOrHTTPClientParam {
 }
 
 // WithDisablePanicRecovery disables the enabled-by-default panic recovery middleware.
-// If the request was otherwise succeeding (err == nil), we return a new zerror with
+// If the request was otherwise succeeding (err == nil), we return a new werror with
 // the recovered object as an unsafe param. If there's an error, we werror.Wrap it.
 // If errMiddleware is not nil, it is invoked on the recovered object.
 func WithDisablePanicRecovery() ClientOrHTTPClientParam {
@@ -262,11 +266,38 @@ func WithProxyFromEnvironment() ClientOrHTTPClientParam {
 	})
 }
 
-// WithTLSConfig sets the SSL/TLS configuration for the HTTP client's Transport.
+// WithProxyURL can be used to set a socks5 or HTTP(s) proxy.
+func WithProxyURL(proxyURLString string) ClientOrHTTPClientParam {
+	return clientOrHTTPClientParamFunc(func(b *httpClientBuilder) error {
+		proxyURL, err := url.Parse(proxyURLString)
+		if err != nil {
+			return werror.Wrap(err, "failed to parse proxy url")
+		}
+		switch proxyURL.Scheme {
+		case "http", "https":
+			b.Proxy = http.ProxyURL(proxyURL)
+		case "socks5":
+			b.ProxyDialerBuilder = func(dialer *net.Dialer) (proxy.Dialer, error) {
+				proxyDialer, err := proxy.FromURL(proxyURL, dialer)
+				if err != nil {
+					return nil, werror.Wrap(err, "failed to create socks5 dialer")
+				}
+				return proxyDialer, nil
+			}
+		default:
+			return werror.Error("unrecognized proxy scheme", werror.SafeParam("scheme", proxyURL.Scheme))
+		}
+		return nil
+	})
+}
+
+// WithTLSConfig sets the SSL/TLS configuration for the HTTP client's Transport using a copy of the provided config.
 // The palantir/pkg/tlsconfig package is recommended to build a tls.Config from sane defaults.
 func WithTLSConfig(conf *tls.Config) ClientOrHTTPClientParam {
 	return clientOrHTTPClientParamFunc(func(b *httpClientBuilder) error {
-		b.TLSClientConfig = conf
+		if conf != nil {
+			b.TLSClientConfig = conf.Clone()
+		}
 		return nil
 	})
 }
@@ -276,6 +307,44 @@ func WithTLSConfig(conf *tls.Config) ClientOrHTTPClientParam {
 func WithDialTimeout(timeout time.Duration) ClientOrHTTPClientParam {
 	return clientOrHTTPClientParamFunc(func(b *httpClientBuilder) error {
 		b.DialTimeout = timeout
+		return nil
+	})
+}
+
+// WithIdleConnTimeout sets the timeout for idle connections.
+// If unset, the client defaults to 90 seconds.
+func WithIdleConnTimeout(timeout time.Duration) ClientOrHTTPClientParam {
+	return clientOrHTTPClientParamFunc(func(b *httpClientBuilder) error {
+		b.IdleConnTimeout = timeout
+		return nil
+	})
+}
+
+// WithTLSHandshakeTimeout sets the timeout for TLS handshakes.
+// If unset, the client defaults to 10 seconds.
+func WithTLSHandshakeTimeout(timeout time.Duration) ClientOrHTTPClientParam {
+	return clientOrHTTPClientParamFunc(func(b *httpClientBuilder) error {
+		b.TLSHandshakeTimeout = timeout
+		return nil
+	})
+}
+
+// WithExpectContinueTimeout sets the timeout to receive the server's first response headers after
+// fully writing the request headers if the request has an "Expect: 100-continue" header.
+// If unset, the client defaults to 1 second.
+func WithExpectContinueTimeout(timeout time.Duration) ClientOrHTTPClientParam {
+	return clientOrHTTPClientParamFunc(func(b *httpClientBuilder) error {
+		b.ExpectContinueTimeout = timeout
+		return nil
+	})
+}
+
+// WithResponseHeaderTimeout specifies the amount of time to wait for a server's response headers after fully writing
+// the request (including its body, if any). This time does not include the time to read the response body. If unset,
+// the client defaults to having no response header timeout.
+func WithResponseHeaderTimeout(timeout time.Duration) ClientOrHTTPClientParam {
+	return clientOrHTTPClientParamFunc(func(b *httpClientBuilder) error {
+		b.ResponseHeaderTimeout = timeout
 		return nil
 	})
 }
@@ -327,7 +396,28 @@ func WithMaxRetries(maxTransportRetries int) ClientParam {
 // error to a non-nil value in the case of >= 400 HTTP response.
 func WithDisableRestErrors() ClientParam {
 	return clientParamFunc(func(b *clientBuilder) error {
-		b.disableRestErrors = true
+		b.errorDecoder = nil
 		return nil
 	})
+}
+
+func WithErrorDecoder(errorDecoder ErrorDecoder) ClientParam {
+	return clientParamFunc(func(b *clientBuilder) error {
+		b.errorDecoder = errorDecoder
+		return nil
+	})
+}
+
+// WithBasicAuth sets the request's Authorization header to use HTTP Basic Authentication with the provided username and
+// password.
+func WithBasicAuth(username, password string) ClientParam {
+	return WithMiddleware(MiddlewareFunc(func(req *http.Request, next http.RoundTripper) (*http.Response, error) {
+		setBasicAuth(req.Header, username, password)
+		return next.RoundTrip(req)
+	}))
+}
+
+func setBasicAuth(h http.Header, username, password string) {
+	basicAuthBytes := []byte(username + ":" + password)
+	h.Set("Authorization", "Basic "+base64.StdEncoding.EncodeToString(basicAuthBytes))
 }
