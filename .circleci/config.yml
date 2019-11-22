@@ -4,8 +4,8 @@ owner-repo: &owner-repo
 version: 2.1
 
 orbs:
-  go: palantir/go@0.0.5
-  godel: palantir/godel@0.0.2
+  go: palantir/go@0.0.13
+  godel: palantir/godel@0.0.12
 
 workflows:
   version: 2
@@ -14,15 +14,18 @@ workflows:
       - godel/verify:
           name: verify
           executor:
-            name: go/golang-1_11
+            name: go/golang
+            version: 1.13.3
             <<: *owner-repo
       - godel/test:
-          name: test-go-1.11
+          name: test-go-1.13
           executor:
-            name: go/golang-1_11
+            name: go/golang
+            version: 1.13.3
             <<: *owner-repo
       - godel/test:
-          name: test-go-1.10
+          name: test-go-1.12
           executor:
-            name: go/golang-1_10
+            name: go/golang
+            version: 1.12.12
             <<: *owner-repo
