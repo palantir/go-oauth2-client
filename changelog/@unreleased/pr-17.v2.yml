@@ -1,0 +1,5 @@
+type: feature
+feature:
+  description: Add module definition
+  links:
+  - https://github.com/palantir/go-oauth2-client/pull/17
