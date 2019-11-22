@@ -1,3 +1,7 @@
+<p align="right">
+<a href="https://autorelease.general.dmz.palantir.tech/palantir/go-oauth2-client"><img src="https://img.shields.io/badge/Perform%20an-Autorelease-success.svg" alt="Autorelease"></a>
+</p>
+
 # go-oauth-client
 
 [![CircleCI](https://circleci.com/gh/palantir/go-oauth2-client/tree/develop.svg?style=svg)](https://circleci.com/gh/palantir/go-oauth2-client/tree/develop) [![](https://godoc.org/github.com/palantir/go-oauth2-client?status.svg)](http://godoc.org/github.com/palantir/go-oauth2-client)
