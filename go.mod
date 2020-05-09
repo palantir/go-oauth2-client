@@ -1,4 +1,4 @@
-module github.com/palantir/go-oauth2-client
+module github.com/palantir/go-oauth2-client/v2
 
 go 1.13
 

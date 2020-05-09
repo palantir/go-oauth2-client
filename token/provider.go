@@ -18,7 +18,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/palantir/go-oauth2-client/oauth"
+	"github.com/palantir/go-oauth2-client/v2/oauth"
 )
 
 // Provider accepts a context and returns either:

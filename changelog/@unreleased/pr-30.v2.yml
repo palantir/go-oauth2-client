@@ -1,0 +1,5 @@
+type: fix
+fix:
+  description: Bump module path to v2
+  links:
+  - https://github.com/palantir/go-oauth2-client/pull/30
