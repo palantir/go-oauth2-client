@@ -20,7 +20,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/palantir/go-oauth2-client/token"
+	"github.com/palantir/go-oauth2-client/v2/token"
 	"github.com/palantir/pkg/retry"
 	werror "github.com/palantir/witchcraft-go-error"
 	"github.com/stretchr/testify/assert"
