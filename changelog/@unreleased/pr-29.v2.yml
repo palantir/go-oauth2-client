@@ -1,0 +1,6 @@
+type: break
+break:
+  description: Upgrade conjure-go-runtime to v2.1.0
+  links:
+  - https://github.com/palantir/go-oauth2-client/pull/29
+

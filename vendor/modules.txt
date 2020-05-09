@@ -1,9 +1,10 @@
 # github.com/davecgh/go-spew v1.1.1
 github.com/davecgh/go-spew/spew
-# github.com/palantir/conjure-go-runtime v0.4.0
-github.com/palantir/conjure-go-runtime/conjure-go-client/httpclient
-github.com/palantir/conjure-go-runtime/conjure-go-client/httpclient/internal
-github.com/palantir/conjure-go-runtime/conjure-go-contract/codecs
+# github.com/palantir/conjure-go-runtime/v2 v2.1.0
+github.com/palantir/conjure-go-runtime/v2/conjure-go-client/httpclient
+github.com/palantir/conjure-go-runtime/v2/conjure-go-client/httpclient/internal
+github.com/palantir/conjure-go-runtime/v2/conjure-go-contract/codecs
+github.com/palantir/conjure-go-runtime/v2/conjure-go-contract/errors
 # github.com/palantir/go-metrics v1.1.0
 github.com/palantir/go-metrics
 # github.com/palantir/pkg/bytesbuffers v1.0.0
@@ -16,10 +17,13 @@ github.com/palantir/pkg/retry
 github.com/palantir/pkg/safejson
 # github.com/palantir/pkg/tlsconfig v1.0.0
 github.com/palantir/pkg/tlsconfig
-# github.com/palantir/witchcraft-go-error v1.2.0
+# github.com/palantir/pkg/uuid v1.0.0
+github.com/palantir/pkg/uuid
+github.com/palantir/pkg/uuid/internal/uuid
+# github.com/palantir/witchcraft-go-error v1.3.0
 github.com/palantir/witchcraft-go-error
 github.com/palantir/witchcraft-go-error/internal/errors
-# github.com/palantir/witchcraft-go-logging v1.5.0
+# github.com/palantir/witchcraft-go-logging v1.5.2
 github.com/palantir/witchcraft-go-logging/internal/gopath
 github.com/palantir/witchcraft-go-logging/wlog
 github.com/palantir/witchcraft-go-logging/wlog/internal
