@@ -42,8 +42,8 @@ github.com/onsi/gomega v1.4.3/go.mod h1:ex+gbHU/CVuBBDIJjb2X0qEXbFg53c61hWP/1Cpa
 github.com/openzipkin/zipkin-go v0.2.2 h1:nY8Hti+WKaP0cRsSeQ026wU03QsM762XBeCXBb9NAWI=
 github.com/openzipkin/zipkin-go v0.2.2/go.mod h1:NaW6tEwdmWMaCDZzg8sh+IBNOxHMPnhQw8ySjnjRyN4=
 github.com/palantir/conjure-go-runtime/v2 v2.2.0/go.mod h1:k4+u7YJwBAO6Kk7SGvFCQR7vrkVW8vgQxO8rPZGuS5g=
-github.com/palantir/conjure-go-runtime/v2 v2.8.0 h1:PRfYLJ2LSq0GaIKlgbtUkq2AO+XeRNv3mpJL0hHXpJQ=
-github.com/palantir/conjure-go-runtime/v2 v2.8.0/go.mod h1:tTeTRoO23DHx/3E3HLfhbwh98Byrmp1cdk8m9kcZ2M4=
+github.com/palantir/conjure-go-runtime/v2 v2.9.1 h1:3C2q+fbTbBAymd2B55jHVGgskOyR7yduslb0ySGmp4o=
+github.com/palantir/conjure-go-runtime/v2 v2.9.1/go.mod h1:rhOuZSp5lge3JKD5gzAFRb93uA1/jfmeefpH2evRAug=
 github.com/palantir/go-metrics v1.1.0 h1:gf6W9EBvzREheH/3wNLPmJD8pe+xtag3TjePZe4hUTQ=
 github.com/palantir/go-metrics v1.1.0/go.mod h1:fRkuipBnsI4nD8Vd9UNcrUJvD8Y0wOJMSbicygcBrGs=
 github.com/palantir/pkg v1.0.1 h1:ZbGUcc14N7xcZSY9cehQoiHHTm/BAZO5RJdlsNEtSbk=
@@ -86,8 +86,8 @@ github.com/palantir/pkg/safeyaml v1.0.1 h1:4cSUj9Ttnwydq4vxB8NSxe+qhquBYYtMuJbw6
 github.com/palantir/pkg/safeyaml v1.0.1/go.mod h1:rwADKpvXsYupKvXJg4pOuPrwK8F4Ki95VIq6lHjUqyA=
 github.com/palantir/pkg/tlsconfig v1.0.0 h1:Ivvntm4LFe7aXKzMzZkxDq12nvdAhKllchijXBTgJI4=
 github.com/palantir/pkg/tlsconfig v1.0.0/go.mod h1:pyDZXpSYm5J6r/4Fm6mjDV25Oe1aMsrgTjkCccKt8MM=
-github.com/palantir/pkg/tlsconfig v1.0.1 h1:QlOLCSsUnrZJrNnWMIegDBULVjsyAgFJ8q6Q+8ukizU=
-github.com/palantir/pkg/tlsconfig v1.0.1/go.mod h1:GmXODSYyPva3huR2pEaAknSGIcyRPy08Hvr38WP5+W4=
+github.com/palantir/pkg/tlsconfig v1.0.2 h1:N6yw9WPkoYpO1lXF58W1cmYK0nEoek5MZswFqpKOoc4=
+github.com/palantir/pkg/tlsconfig v1.0.2/go.mod h1:GmXODSYyPva3huR2pEaAknSGIcyRPy08Hvr38WP5+W4=
 github.com/palantir/pkg/transform v1.0.0 h1:21MzkUg9fQgIdadTYMM1Z1qrml2MVdpNY5ai27G15LM=
 github.com/palantir/pkg/transform v1.0.0/go.mod h1:YH2PQUzswoDayk4rTvKt6B+NcnUJgZRNr9MEqfAMCo0=
 github.com/palantir/pkg/uuid v1.0.0 h1:w+61TWaMpaYytAILxzj/3IJvTzLZkZQvYW52H7dK900=
@@ -106,6 +106,8 @@ github.com/palantir/witchcraft-go-logging v1.9.0 h1:YGsqh6T58F6vPTLii9tvvZTYO6rT
 github.com/palantir/witchcraft-go-logging v1.9.0/go.mod h1:6hkyOVxxkoSOVSsL+ZoBVQiFzRSFthlnn47xFOnm6+w=
 github.com/palantir/witchcraft-go-params v1.1.0 h1:siRqQv9TuJ0qY2JK5Svd3/rGQQCWvNnjI2OGAftm8gc=
 github.com/palantir/witchcraft-go-params v1.1.0/go.mod h1:HH+l5b0binfqBJ21qVvQVOJp6s2/I6ld0NEWnaEgWvI=
+github.com/palantir/witchcraft-go-params v1.2.0 h1:hRaazk4T6ERR/58Ksn7V5/t9CDOhzUIUYaY8J6zgBxI=
+github.com/palantir/witchcraft-go-params v1.2.0/go.mod h1:HH+l5b0binfqBJ21qVvQVOJp6s2/I6ld0NEWnaEgWvI=
 github.com/palantir/witchcraft-go-tracing v1.2.0 h1:+7MinUHafMfF3fDdHVRuQ6fhMi8R1qxv36ECqN3cqOQ=
 github.com/palantir/witchcraft-go-tracing v1.2.0/go.mod h1:rLnl+hlFfUOnHXaL9qMdnp2FoifzWuxsmlFpA+oip2A=
 github.com/pierrec/lz4 v1.0.2-0.20190131084431-473cd7ce01a1/go.mod h1:3/3N9NVKO0jef7pBehbT1qWhCMrIgbYNnFAZCqQ5LRc=
