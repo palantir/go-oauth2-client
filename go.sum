@@ -40,8 +40,8 @@ github.com/onsi/gomega v1.4.3/go.mod h1:ex+gbHU/CVuBBDIJjb2X0qEXbFg53c61hWP/1Cpa
 github.com/openzipkin/zipkin-go v0.2.2 h1:nY8Hti+WKaP0cRsSeQ026wU03QsM762XBeCXBb9NAWI=
 github.com/openzipkin/zipkin-go v0.2.2/go.mod h1:NaW6tEwdmWMaCDZzg8sh+IBNOxHMPnhQw8ySjnjRyN4=
 github.com/palantir/conjure-go-runtime/v2 v2.2.0/go.mod h1:k4+u7YJwBAO6Kk7SGvFCQR7vrkVW8vgQxO8rPZGuS5g=
-github.com/palantir/conjure-go-runtime/v2 v2.10.0 h1:zjSOcFbsc+2xQZKP9DcfEH+Z6uZsv6FtRF9VIqQQ2P8=
-github.com/palantir/conjure-go-runtime/v2 v2.10.0/go.mod h1:rhOuZSp5lge3JKD5gzAFRb93uA1/jfmeefpH2evRAug=
+github.com/palantir/conjure-go-runtime/v2 v2.11.0 h1:SncjhJ1FS/uzJt+tkGVwGy8CGKhrDBFQGMEAlYRuWWU=
+github.com/palantir/conjure-go-runtime/v2 v2.11.0/go.mod h1:Hhmc+cJIK7AHbP0v6nuTMLYqBN76iXSPZal43DzR9zU=
 github.com/palantir/go-metrics v1.1.0 h1:gf6W9EBvzREheH/3wNLPmJD8pe+xtag3TjePZe4hUTQ=
 github.com/palantir/go-metrics v1.1.0/go.mod h1:fRkuipBnsI4nD8Vd9UNcrUJvD8Y0wOJMSbicygcBrGs=
 github.com/palantir/pkg v1.0.1 h1:ZbGUcc14N7xcZSY9cehQoiHHTm/BAZO5RJdlsNEtSbk=
@@ -74,8 +74,8 @@ github.com/palantir/pkg/safeyaml v1.0.0/go.mod h1:g0GfNcalrnCZbwyZbW0OBmtHdjLXK7
 github.com/palantir/pkg/safeyaml v1.0.1 h1:4cSUj9Ttnwydq4vxB8NSxe+qhquBYYtMuJbw6EuSZpQ=
 github.com/palantir/pkg/safeyaml v1.0.1/go.mod h1:rwADKpvXsYupKvXJg4pOuPrwK8F4Ki95VIq6lHjUqyA=
 github.com/palantir/pkg/tlsconfig v1.0.0/go.mod h1:pyDZXpSYm5J6r/4Fm6mjDV25Oe1aMsrgTjkCccKt8MM=
-github.com/palantir/pkg/tlsconfig v1.0.2 h1:N6yw9WPkoYpO1lXF58W1cmYK0nEoek5MZswFqpKOoc4=
-github.com/palantir/pkg/tlsconfig v1.0.2/go.mod h1:GmXODSYyPva3huR2pEaAknSGIcyRPy08Hvr38WP5+W4=
+github.com/palantir/pkg/tlsconfig v1.1.0 h1:m4vn2v64qEjQ9clmEwa1lrZopR5F+gBbXjRA19JIqKo=
+github.com/palantir/pkg/tlsconfig v1.1.0/go.mod h1:296vFNnUdrZV3aFtufP9VFXMO4zVnjaMgnI3vt5l5ek=
 github.com/palantir/pkg/transform v1.0.0 h1:21MzkUg9fQgIdadTYMM1Z1qrml2MVdpNY5ai27G15LM=
 github.com/palantir/pkg/transform v1.0.0/go.mod h1:YH2PQUzswoDayk4rTvKt6B+NcnUJgZRNr9MEqfAMCo0=
 github.com/palantir/pkg/uuid v1.0.0/go.mod h1:yCHOTYHJD/zKB1c8sJ2IhIGvPGnYYcp0FgGTnbr5jiM=
