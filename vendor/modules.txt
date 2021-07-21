@@ -1,6 +1,7 @@
 # github.com/davecgh/go-spew v1.1.1
 github.com/davecgh/go-spew/spew
 # github.com/palantir/conjure-go-runtime/v2 v2.18.0
+## explicit
 github.com/palantir/conjure-go-runtime/v2/conjure-go-client/httpclient
 github.com/palantir/conjure-go-runtime/v2/conjure-go-client/httpclient/internal
 github.com/palantir/conjure-go-runtime/v2/conjure-go-contract/codecs
@@ -14,6 +15,7 @@ github.com/palantir/pkg/bytesbuffers
 # github.com/palantir/pkg/metrics v1.0.1
 github.com/palantir/pkg/metrics
 # github.com/palantir/pkg/retry v1.1.1
+## explicit
 github.com/palantir/pkg/retry
 # github.com/palantir/pkg/safejson v1.0.1
 github.com/palantir/pkg/safejson
@@ -23,9 +25,11 @@ github.com/palantir/pkg/tlsconfig
 github.com/palantir/pkg/uuid
 github.com/palantir/pkg/uuid/internal/uuid
 # github.com/palantir/witchcraft-go-error v1.5.0
+## explicit
 github.com/palantir/witchcraft-go-error
 github.com/palantir/witchcraft-go-error/internal/errors
 # github.com/palantir/witchcraft-go-logging v1.16.0
+## explicit
 github.com/palantir/witchcraft-go-logging/internal/gopath
 github.com/palantir/witchcraft-go-logging/wlog
 github.com/palantir/witchcraft-go-logging/wlog/internal
@@ -40,6 +44,7 @@ github.com/pkg/errors
 # github.com/pmezard/go-difflib v1.0.0
 github.com/pmezard/go-difflib/difflib
 # github.com/stretchr/testify v1.7.0
+## explicit
 github.com/stretchr/testify/assert
 github.com/stretchr/testify/require
 # golang.org/x/net v0.0.0-20210614182718-04defd469f4e
