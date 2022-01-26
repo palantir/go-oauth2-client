@@ -1,6 +1,6 @@
 # github.com/davecgh/go-spew v1.1.1
 github.com/davecgh/go-spew/spew
-# github.com/palantir/conjure-go-runtime/v2 v2.25.0
+# github.com/palantir/conjure-go-runtime/v2 v2.26.0
 ## explicit
 github.com/palantir/conjure-go-runtime/v2/conjure-go-client/httpclient
 github.com/palantir/conjure-go-runtime/v2/conjure-go-client/httpclient/internal
@@ -13,7 +13,7 @@ github.com/palantir/go-metrics
 github.com/palantir/pkg
 # github.com/palantir/pkg/bytesbuffers v1.0.1
 github.com/palantir/pkg/bytesbuffers
-# github.com/palantir/pkg/metrics v1.2.0
+# github.com/palantir/pkg/metrics v1.3.0
 github.com/palantir/pkg/metrics
 # github.com/palantir/pkg/refreshable v1.3.2
 github.com/palantir/pkg/refreshable
