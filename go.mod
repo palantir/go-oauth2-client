@@ -5,8 +5,8 @@ go 1.18
 require (
 	github.com/palantir/conjure-go-runtime/v2 v2.27.0
 	github.com/palantir/pkg/retry v1.1.1
-	github.com/palantir/witchcraft-go-error v1.5.0
-	github.com/palantir/witchcraft-go-logging v1.17.0
+	github.com/palantir/witchcraft-go-error v1.6.0
+	github.com/palantir/witchcraft-go-logging v1.18.0
 	github.com/stretchr/testify v1.7.1
 )
 
@@ -22,7 +22,7 @@ require (
 	github.com/palantir/pkg/uuid v1.0.1 // indirect
 	github.com/palantir/witchcraft-go-params v1.2.0 // indirect
 	github.com/palantir/witchcraft-go-tracing v1.4.0 // indirect
-	github.com/pkg/errors v0.8.1 // indirect
+	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	golang.org/x/net v0.0.0-20210614182718-04defd469f4e // indirect
 	golang.org/x/text v0.3.6 // indirect
