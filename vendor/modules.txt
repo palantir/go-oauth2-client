@@ -3,7 +3,7 @@
 github.com/davecgh/go-spew/spew
 # github.com/kr/text v0.2.0
 ## explicit
-# github.com/palantir/conjure-go-runtime/v2 v2.31.0
+# github.com/palantir/conjure-go-runtime/v2 v2.32.0
 ## explicit; go 1.18
 github.com/palantir/conjure-go-runtime/v2/conjure-go-client/httpclient
 github.com/palantir/conjure-go-runtime/v2/conjure-go-client/httpclient/internal
