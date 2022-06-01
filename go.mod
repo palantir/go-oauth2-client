@@ -6,7 +6,7 @@ require (
 	github.com/palantir/conjure-go-runtime/v2 v2.32.0
 	github.com/palantir/pkg/retry v1.1.1
 	github.com/palantir/witchcraft-go-error v1.8.0
-	github.com/palantir/witchcraft-go-logging v1.23.0
+	github.com/palantir/witchcraft-go-logging v1.24.0
 	github.com/stretchr/testify v1.7.1
 )
 
