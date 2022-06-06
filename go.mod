@@ -7,7 +7,7 @@ require (
 	github.com/palantir/pkg/retry v1.1.1
 	github.com/palantir/witchcraft-go-error v1.9.0
 	github.com/palantir/witchcraft-go-logging v1.24.0
-	github.com/stretchr/testify v1.7.1
+	github.com/stretchr/testify v1.7.2
 )
 
 require (
@@ -27,5 +27,5 @@ require (
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	golang.org/x/net v0.0.0-20210805182204-aaa1db679c0d // indirect
 	golang.org/x/text v0.3.6 // indirect
-	gopkg.in/yaml.v3 v3.0.0-20200313102051-9f266ea9e77c // indirect
+	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
