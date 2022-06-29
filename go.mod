@@ -7,7 +7,7 @@ require (
 	github.com/palantir/pkg/retry v1.1.1
 	github.com/palantir/witchcraft-go-error v1.9.0
 	github.com/palantir/witchcraft-go-logging v1.24.0
-	github.com/stretchr/testify v1.7.5
+	github.com/stretchr/testify v1.8.0
 )
 
 require (
