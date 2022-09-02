@@ -3,7 +3,7 @@
 github.com/davecgh/go-spew/spew
 # github.com/kr/text v0.2.0
 ## explicit
-# github.com/palantir/conjure-go-runtime/v2 v2.38.0
+# github.com/palantir/conjure-go-runtime/v2 v2.39.0
 ## explicit; go 1.18
 github.com/palantir/conjure-go-runtime/v2/conjure-go-client/httpclient
 github.com/palantir/conjure-go-runtime/v2/conjure-go-client/httpclient/internal
@@ -48,10 +48,10 @@ github.com/palantir/witchcraft-go-logging/internal/gopath
 github.com/palantir/witchcraft-go-logging/wlog
 github.com/palantir/witchcraft-go-logging/wlog/internal
 github.com/palantir/witchcraft-go-logging/wlog/svclog/svc1log
-# github.com/palantir/witchcraft-go-params v1.10.0
+# github.com/palantir/witchcraft-go-params v1.11.0
 ## explicit; go 1.18
 github.com/palantir/witchcraft-go-params
-# github.com/palantir/witchcraft-go-tracing v1.12.0
+# github.com/palantir/witchcraft-go-tracing v1.13.0
 ## explicit; go 1.18
 github.com/palantir/witchcraft-go-tracing/wtracing
 github.com/palantir/witchcraft-go-tracing/wtracing/propagation/b3
