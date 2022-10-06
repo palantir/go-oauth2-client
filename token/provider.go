@@ -18,6 +18,7 @@ import (
 	"context"
 	"time"
 
+	"github.com/palantir/conjure-go-runtime/v2/conjure-go-client/httpclient"
 	"github.com/palantir/go-oauth2-client/v2/oauth"
 )
 
@@ -26,7 +27,7 @@ import (
 // (1) a nonempty token and a nil error, or
 //
 // (2) an empty string and a non-nil error.
-type Provider func(context.Context) (string, error)
+type Provider = httpclient.TokenProvider
 
 // CreateAndStartRefreshingOAuthProvider returns a Provider which caches and periodically refreshes a client token.
 // When it returns, we have not yet necessarily successfully fetched a valid token.
