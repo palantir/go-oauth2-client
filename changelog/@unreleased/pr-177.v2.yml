@@ -1,0 +1,5 @@
+type: improvement
+improvement:
+  description: Deserialize OAuth2 error response
+  links:
+  - https://github.com/palantir/go-oauth2-client/pull/177

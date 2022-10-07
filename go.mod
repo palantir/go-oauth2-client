@@ -7,6 +7,7 @@ require (
 	github.com/palantir/pkg/retry v1.2.0
 	github.com/palantir/witchcraft-go-error v1.17.0
 	github.com/palantir/witchcraft-go-logging v1.29.0
+	github.com/palantir/witchcraft-go-params v1.14.0
 	github.com/stretchr/testify v1.8.0
 )
 
@@ -21,7 +22,6 @@ require (
 	github.com/palantir/pkg/safejson v1.1.0 // indirect
 	github.com/palantir/pkg/tlsconfig v1.2.0 // indirect
 	github.com/palantir/pkg/uuid v1.1.0 // indirect
-	github.com/palantir/witchcraft-go-params v1.14.0 // indirect
 	github.com/palantir/witchcraft-go-tracing v1.16.0 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
