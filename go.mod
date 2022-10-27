@@ -16,7 +16,7 @@ require (
 	github.com/kr/text v0.2.0 // indirect
 	github.com/palantir/go-metrics v1.1.1 // indirect
 	github.com/palantir/pkg v1.1.0 // indirect
-	github.com/palantir/pkg/bytesbuffers v1.1.0 // indirect
+	github.com/palantir/pkg/bytesbuffers v1.2.0 // indirect
 	github.com/palantir/pkg/metrics v1.4.0 // indirect
 	github.com/palantir/pkg/refreshable v1.4.0 // indirect
 	github.com/palantir/pkg/safejson v1.1.0 // indirect
