@@ -8,7 +8,7 @@ require (
 	github.com/palantir/witchcraft-go-error v1.25.0
 	github.com/palantir/witchcraft-go-logging v1.39.0
 	github.com/palantir/witchcraft-go-params v1.22.0
-	github.com/stretchr/testify v1.8.3
+	github.com/stretchr/testify v1.8.4
 )
 
 require (
