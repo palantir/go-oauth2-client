@@ -19,6 +19,7 @@ import (
 	"crypto/sha256"
 	"encoding/base64"
 	"errors"
+	"fmt"
 	"net"
 	"net/http"
 	"net/url"
@@ -134,6 +135,9 @@ func newRedirectHandler(resultsCh chan<- string, errorsCh chan<- error) http.Han
 		token := r.URL.Query().Get("code")
 		if token == "" {
 			errorsCh <- errors.New("did not receive token")
+		}
+		if _, err := fmt.Fprint(w, "You have successfully signed into your account.\nYou can close this window and continue using the product."); err != nil {
+			errorsCh <- werror.Wrap(err, "failed to write response")
 		}
 		resultsCh <- token
 	}
