@@ -1,0 +1,5 @@
+type: feature
+feature:
+  description: Implement support for `authorization_code` OAuth flow
+  links:
+  - https://github.com/palantir/go-oauth2-client/pull/269
