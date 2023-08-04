@@ -47,7 +47,7 @@ func (m *authorizationCodeLoginFlowManager) PerformLoginFlow(ctx context.Context
 		ClientID:     resp.ClientID,
 		Code:         resp.Code,
 		CodeVerifier: resp.CodeVerifier,
-		RedirectURI:  redirectURL.String(),
+		RedirectURI:  DefaultCallbackURL.String(),
 	})
 	if err != nil {
 		return "", err

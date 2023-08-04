@@ -35,10 +35,11 @@ const (
 )
 
 var (
-	redirectURL = url.URL{
+	// DefaultCallbackURL is the default callback URL used by the AuthorizationCodeHandler
+	DefaultCallbackURL = url.URL{
 		Scheme: "http",
 		Host:   "localhost:8401",
-		Path:   "/redirect",
+		Path:   "/callback/oauth2",
 	}
 )
 
@@ -71,7 +72,7 @@ func NewAuthorizationCodeHandler(clientID string, loginBaseURL string) Authoriza
 // PromptAndWaitForCode opens a login URL in the browser, starts a local webserver listening on port 8401 for the OAuth callback,
 // and returns the obtained authorization code once it is received by the callback
 func (h *authorizationCodeHandler) PromptAndWaitForCode(ctx context.Context) (*AuthorizationCode, error) {
-	l, err := net.Listen("tcp", redirectURL.Host)
+	l, err := net.Listen("tcp", DefaultCallbackURL.Host)
 	if err != nil {
 		return nil, werror.WrapWithContextParams(ctx, err, "failed to create callback handling server")
 	}
@@ -79,7 +80,7 @@ func (h *authorizationCodeHandler) PromptAndWaitForCode(ctx context.Context) (*A
 	resultsCh := make(chan string)
 	errorsCh := make(chan error)
 	serveMux := http.NewServeMux()
-	serveMux.HandleFunc(redirectURL.Path, newRedirectHandler(resultsCh, errorsCh))
+	serveMux.HandleFunc(DefaultCallbackURL.Path, newRedirectHandler(resultsCh, errorsCh))
 
 	s := &http.Server{Handler: serveMux}
 	go func() {
@@ -104,7 +105,7 @@ func (h *authorizationCodeHandler) PromptAndWaitForCode(ctx context.Context) (*A
 	initialLoginURL.RawQuery = url.Values{
 		"response_type":         {"code"},
 		"client_id":             {h.clientID},
-		"redirect_uri":          {redirectURL.String()},
+		"redirect_uri":          {DefaultCallbackURL.String()},
 		"code_verifier":         {codeVerifier},
 		"code_challenge":        {codeChallenge},
 		"code_challenge_method": {"S256"},
