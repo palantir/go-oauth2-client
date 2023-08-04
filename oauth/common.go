@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Palantir Technologies. All rights reserved.
+// Copyright (c) 2023 Palantir Technologies. All rights reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,23 +19,14 @@ import (
 	"encoding/json"
 	"io"
 	"net/http"
-	"net/url"
 
-	"github.com/palantir/conjure-go-runtime/v2/conjure-go-client/httpclient"
-	"github.com/palantir/conjure-go-runtime/v2/conjure-go-contract/codecs"
 	werror "github.com/palantir/witchcraft-go-error"
 	wparams "github.com/palantir/witchcraft-go-params"
 )
 
 const (
-	clientCredentialsEndpoint  = "/oauth2/token"
-	clientCredentialsGrantType = "client_credentials"
+	oauthTokenEndpoint = "/oauth2/token"
 )
-
-type serviceClient struct {
-	client                   httpclient.Client
-	clientCredentialEndpoint string
-}
 
 type oauth2Response struct {
 	RefreshToken string `json:"refresh_token"`
@@ -43,35 +34,6 @@ type oauth2Response struct {
 	TokenType    string `json:"token_type"`
 	ExpiresIn    int    `json:"expires_in"`
 	AccessToken  string `json:"access_token"`
-}
-
-// NewClientCredentialClient returns an oauth2.Client configured using the provided client.
-// The client will use the httpclient's configured BaseURIs.
-func NewClientCredentialClient(client httpclient.Client) ClientCredentialClient {
-	return &serviceClient{
-		client: client,
-	}
-}
-
-func (s *serviceClient) CreateClientCredentialToken(ctx context.Context, clientID, clientSecret string) (string, error) {
-	urlValues := url.Values{
-		"grant_type":    []string{clientCredentialsGrantType},
-		"client_id":     []string{clientID},
-		"client_secret": []string{clientSecret},
-	}
-	var oauth2Resp oauth2Response
-	_, err := s.client.Do(ctx,
-		httpclient.WithRPCMethodName("CreateClientCredentialToken"),
-		httpclient.WithRequestMethod(http.MethodPost),
-		httpclient.WithPath(clientCredentialsEndpoint),
-		httpclient.WithRequestBody(urlValues, codecs.FormURLEncoded),
-		httpclient.WithJSONResponse(&oauth2Resp),
-		httpclient.WithRequestErrorDecoder(errorDecoder{ctx}),
-	)
-	if err != nil {
-		return "", werror.WrapWithContextParams(ctx, err, "failed to make create client credential token request")
-	}
-	return oauth2Resp.AccessToken, nil
 }
 
 type errorDecoder struct {

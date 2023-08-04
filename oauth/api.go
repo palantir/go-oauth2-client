@@ -18,7 +18,12 @@ import (
 	"context"
 )
 
-// ClientCredentialClient returns a client_credentials token
+// ClientCredentialClient returns a token using Client Credentials flow
 type ClientCredentialClient interface {
 	CreateClientCredentialToken(ctx context.Context, clientID, clientSecret string) (string, error)
+}
+
+// AuthorizationCodeClient returns a token using Authorization Code flow
+type AuthorizationCodeClient interface {
+	CreateAuthorizationCodeToken(ctx context.Context, req AuthorizationCodeTokenRequest) (string, error)
 }
