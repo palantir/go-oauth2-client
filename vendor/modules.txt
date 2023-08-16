@@ -23,8 +23,8 @@ github.com/palantir/pkg
 # github.com/palantir/pkg/bytesbuffers v1.2.0
 ## explicit; go 1.19
 github.com/palantir/pkg/bytesbuffers
-# github.com/palantir/pkg/metrics v1.4.0
-## explicit; go 1.19
+# github.com/palantir/pkg/metrics v1.5.0
+## explicit; go 1.20
 github.com/palantir/pkg/metrics
 # github.com/palantir/pkg/refreshable v1.4.0
 ## explicit; go 1.19
