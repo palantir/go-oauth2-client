@@ -18,8 +18,8 @@ github.com/nmiyake/pkg/dirs v1.0.0 h1:pYeIw1wH7jh5/ew8naGE4Q56byJG7Uyi8PwwhVe/MT
 github.com/nmiyake/pkg/dirs v1.0.0/go.mod h1:r6/PkZ3CA1szGfQkxcHheEjBWi6Zu6jLb+lQmRXEyvM=
 github.com/openzipkin/zipkin-go v0.2.2 h1:nY8Hti+WKaP0cRsSeQ026wU03QsM762XBeCXBb9NAWI=
 github.com/openzipkin/zipkin-go v0.2.2/go.mod h1:NaW6tEwdmWMaCDZzg8sh+IBNOxHMPnhQw8ySjnjRyN4=
-github.com/palantir/conjure-go-runtime/v2 v2.63.0 h1:Kuk0RGox8rBbwsv6kLtG4JeidfFYjSgNsKNDgICDgS8=
-github.com/palantir/conjure-go-runtime/v2 v2.63.0/go.mod h1:k92Ii/f5oieZfp+0cr4DxehpCnWjjVnyqAKnDPHm4ns=
+github.com/palantir/conjure-go-runtime/v2 v2.64.0 h1:59Eb7iu9JrCc/Hr2jKL3zDFOupgfjMa4voXLx1dpch4=
+github.com/palantir/conjure-go-runtime/v2 v2.64.0/go.mod h1:4qcRMCAPwNEuPiJ/kTMSR9PM+OBU76+1yivkUhnpSSg=
 github.com/palantir/go-metrics v1.1.1 h1:YL/UmptBjrC6iSCTVr7vfuIcjL0M359Da3/gBGNny10=
 github.com/palantir/go-metrics v1.1.1/go.mod h1:fRkuipBnsI4nD8Vd9UNcrUJvD8Y0wOJMSbicygcBrGs=
 github.com/palantir/pkg v1.1.0 h1:0EhrSUP8oeeh3MUvk7V/UU7WmsN1UiJNTvNj0sN9Cpo=
