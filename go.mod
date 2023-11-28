@@ -3,7 +3,7 @@ module github.com/palantir/go-oauth2-client/v2
 go 1.21
 
 require (
-	github.com/palantir/conjure-go-runtime/v2 v2.66.0
+	github.com/palantir/conjure-go-runtime/v2 v2.67.0
 	github.com/palantir/pkg/retry v1.2.0
 	github.com/palantir/witchcraft-go-error v1.30.0
 	github.com/palantir/witchcraft-go-logging v1.47.0
