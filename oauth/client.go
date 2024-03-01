@@ -49,7 +49,17 @@ type oauth2Response struct {
 // The client will use the httpclient's configured BaseURIs.
 func NewClientCredentialClient(client httpclient.Client) ClientCredentialClient {
 	return &serviceClient{
-		client: client,
+		client:                   client,
+		clientCredentialEndpoint: clientCredentialsEndpoint,
+	}
+}
+
+// NewClientCredentialClientWithEndpoint returns an oauth2.Client configured using the provided client and oauth endpoint.
+// The client will use the httpclient's configured BaseURIs.
+func NewClientCredentialClientWithEndpoint(client httpclient.Client, endpoint string) ClientCredentialClient {
+	return &serviceClient{
+		client:                   client,
+		clientCredentialEndpoint: endpoint,
 	}
 }
 
@@ -63,7 +73,7 @@ func (s *serviceClient) CreateClientCredentialToken(ctx context.Context, clientI
 	_, err := s.client.Do(ctx,
 		httpclient.WithRPCMethodName("CreateClientCredentialToken"),
 		httpclient.WithRequestMethod(http.MethodPost),
-		httpclient.WithPath(clientCredentialsEndpoint),
+		httpclient.WithPath(s.clientCredentialEndpoint),
 		httpclient.WithRequestBody(urlValues, codecs.FormURLEncoded),
 		httpclient.WithJSONResponse(&oauth2Resp),
 		httpclient.WithRequestErrorDecoder(errorDecoder{ctx}),
