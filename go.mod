@@ -22,7 +22,7 @@ require (
 	github.com/palantir/pkg/refreshable v1.5.0 // indirect
 	github.com/palantir/pkg/refreshable/v2 v2.0.0 // indirect
 	github.com/palantir/pkg/safejson v1.1.0 // indirect
-	github.com/palantir/pkg/tlsconfig v1.2.0 // indirect
+	github.com/palantir/pkg/tlsconfig v1.3.0 // indirect
 	github.com/palantir/pkg/uuid v1.2.0 // indirect
 	github.com/palantir/witchcraft-go-tracing v1.33.0 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
