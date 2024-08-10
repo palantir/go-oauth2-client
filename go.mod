@@ -3,7 +3,7 @@ module github.com/palantir/go-oauth2-client/v2
 go 1.21
 
 require (
-	github.com/palantir/conjure-go-runtime/v2 v2.77.0
+	github.com/palantir/conjure-go-runtime/v2 v2.78.0
 	github.com/palantir/pkg/retry v1.2.0
 	github.com/palantir/witchcraft-go-error v1.38.0
 	github.com/palantir/witchcraft-go-logging v1.56.0
@@ -24,7 +24,7 @@ require (
 	github.com/palantir/pkg/safejson v1.1.0 // indirect
 	github.com/palantir/pkg/tlsconfig v1.3.0 // indirect
 	github.com/palantir/pkg/uuid v1.2.0 // indirect
-	github.com/palantir/witchcraft-go-tracing v1.37.0 // indirect
+	github.com/palantir/witchcraft-go-tracing v1.38.0 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	golang.org/x/net v0.28.0 // indirect
