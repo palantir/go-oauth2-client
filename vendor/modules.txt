@@ -6,8 +6,8 @@ github.com/davecgh/go-spew/spew
 github.com/golang/snappy
 # github.com/kr/text v0.2.0
 ## explicit
-# github.com/palantir/conjure-go-runtime/v2 v2.79.0
-## explicit; go 1.21
+# github.com/palantir/conjure-go-runtime/v2 v2.83.0
+## explicit; go 1.22.0
 github.com/palantir/conjure-go-runtime/v2/conjure-go-client/httpclient
 github.com/palantir/conjure-go-runtime/v2/conjure-go-client/httpclient/internal
 github.com/palantir/conjure-go-runtime/v2/conjure-go-client/httpclient/internal/refreshingclient
@@ -72,7 +72,7 @@ github.com/pmezard/go-difflib/difflib
 ## explicit; go 1.17
 github.com/stretchr/testify/assert
 github.com/stretchr/testify/require
-# golang.org/x/net v0.29.0
+# golang.org/x/net v0.30.0
 ## explicit; go 1.18
 golang.org/x/net/http/httpguts
 golang.org/x/net/http2
@@ -80,7 +80,7 @@ golang.org/x/net/http2/hpack
 golang.org/x/net/idna
 golang.org/x/net/internal/socks
 golang.org/x/net/proxy
-# golang.org/x/text v0.18.0
+# golang.org/x/text v0.19.0
 ## explicit; go 1.18
 golang.org/x/text/secure/bidirule
 golang.org/x/text/transform
