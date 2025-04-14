@@ -18,7 +18,7 @@ require (
 	github.com/palantir/go-metrics v1.1.1 // indirect
 	github.com/palantir/pkg v1.1.0 // indirect
 	github.com/palantir/pkg/bytesbuffers v1.2.0 // indirect
-	github.com/palantir/pkg/metrics v1.7.0 // indirect
+	github.com/palantir/pkg/metrics v1.8.0 // indirect
 	github.com/palantir/pkg/refreshable v1.5.0 // indirect
 	github.com/palantir/pkg/refreshable/v2 v2.0.0 // indirect
 	github.com/palantir/pkg/safejson v1.1.0 // indirect
