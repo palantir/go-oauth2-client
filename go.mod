@@ -20,7 +20,7 @@ require (
 	github.com/palantir/pkg/bytesbuffers v1.2.0 // indirect
 	github.com/palantir/pkg/metrics v1.8.0 // indirect
 	github.com/palantir/pkg/refreshable v1.6.0 // indirect
-	github.com/palantir/pkg/refreshable/v2 v2.0.0 // indirect
+	github.com/palantir/pkg/refreshable/v2 v2.1.0 // indirect
 	github.com/palantir/pkg/safejson v1.1.0 // indirect
 	github.com/palantir/pkg/tlsconfig v1.3.0 // indirect
 	github.com/palantir/pkg/uuid v1.2.0 // indirect
