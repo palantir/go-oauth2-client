@@ -17,8 +17,8 @@ github.com/nmiyake/pkg/dirs v1.1.0 h1:qyTzK3bTqAJfekQcU6vlydM/YRxhHsv6MiRFEwTkJc
 github.com/nmiyake/pkg/dirs v1.1.0/go.mod h1:lGSUDZPexhLt+aWYfPHXsqnt+HFr2l/+lbEMWUhdZ/U=
 github.com/openzipkin/zipkin-go v0.4.3 h1:9EGwpqkgnwdEIJ+Od7QVSEIH+ocmm5nPat0G7sjsSdg=
 github.com/openzipkin/zipkin-go v0.4.3/go.mod h1:M9wCJZFWCo2RiY+o1eBCEMe0Dp2S5LDHcMZmk3RmK7c=
-github.com/palantir/conjure-go-runtime/v2 v2.98.0 h1:PLFFMQAKBoJCU9+y3ASEg1YqSjY/jVr8ICXqHi0dM+4=
-github.com/palantir/conjure-go-runtime/v2 v2.98.0/go.mod h1:bSVrEw0aHJkc4j46GMX0q4rKqqdVfXrBN+NlQSMRXR8=
+github.com/palantir/conjure-go-runtime/v2 v2.99.0 h1:HPt4w+HUrxX4spucNZyt3t59S1Pwvxa6VThWHRqzIEU=
+github.com/palantir/conjure-go-runtime/v2 v2.99.0/go.mod h1:hqmK7O//4dyJ2mbmsxptiZpL7JmWCYRDRkF6rZ7U2WQ=
 github.com/palantir/go-metrics v1.1.1 h1:YL/UmptBjrC6iSCTVr7vfuIcjL0M359Da3/gBGNny10=
 github.com/palantir/go-metrics v1.1.1/go.mod h1:fRkuipBnsI4nD8Vd9UNcrUJvD8Y0wOJMSbicygcBrGs=
 github.com/palantir/pkg v1.1.0 h1:0EhrSUP8oeeh3MUvk7V/UU7WmsN1UiJNTvNj0sN9Cpo=
@@ -27,8 +27,8 @@ github.com/palantir/pkg/bytesbuffers v1.3.0 h1:0cjgt0T2f0dYbKOv1H2Q9vE8rVhyB++WZ
 github.com/palantir/pkg/bytesbuffers v1.3.0/go.mod h1:D4BwQZu3lngNbtE5tqYFduh6D40i8VSnpr7PcCZ8Th8=
 github.com/palantir/pkg/datetime v1.3.0 h1:w+Lk6NNxFLwN51wJsVvIZ8neoYcR3ITYtXRhwI1Qyt0=
 github.com/palantir/pkg/datetime v1.3.0/go.mod h1:ntQD52iX/eKa2qnALtKT8p1LQTbgxGu0CK5O4PVCgOQ=
-github.com/palantir/pkg/httpserver v1.1.0 h1:AI52vj8W4LtbwCXYzAupmNqrqtWX1F+rRco6ylDUGGw=
-github.com/palantir/pkg/httpserver v1.1.0/go.mod h1:F69HF22BP6pzwdPQqtOSZkjEoxHtTCVwTSSauYCwvQY=
+github.com/palantir/pkg/httpserver v1.2.0 h1:VdmcM4oaDE2HB16yrWWs4dFO6nUQwj+H4+OPxGh1jtw=
+github.com/palantir/pkg/httpserver v1.2.0/go.mod h1:YNtnkfxBDA5jgZj3DmRFb7ntXO24doNmmOwXzNo7bDY=
 github.com/palantir/pkg/metrics v1.9.0 h1:YE5oWa/nYTXzXwezrbYODQ5IHduaUgGkEa7typ2bJmM=
 github.com/palantir/pkg/metrics v1.9.0/go.mod h1:WUQCD22kJADqivxya1EQMSPZcqGZaH96OPUE528cBKw=
 github.com/palantir/pkg/objmatcher v1.2.0 h1:cR0IX2NXAhR1hRFBFUwA7y/+m4CtpXUCm5tabqdvS6I=
