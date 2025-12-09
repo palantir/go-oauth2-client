@@ -19,7 +19,7 @@ import (
 	"time"
 
 	"github.com/palantir/conjure-go-runtime/v3/conjure-go-client/httpclient"
-	"github.com/palantir/go-oauth2-client/v2/oauth"
+	"github.com/palantir/go-oauth2-client/v3/oauth"
 )
 
 // Provider accepts a context and returns either:
