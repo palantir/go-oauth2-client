@@ -21,7 +21,7 @@ require (
 	github.com/palantir/pkg/metrics v1.9.0 // indirect
 	github.com/palantir/pkg/refreshable/v2 v2.3.0 // indirect
 	github.com/palantir/pkg/safejson v1.2.0 // indirect
-	github.com/palantir/pkg/tlsconfig v1.4.0 // indirect
+	github.com/palantir/pkg/tlsconfig v1.5.0 // indirect
 	github.com/palantir/pkg/uuid v1.3.0 // indirect
 	github.com/palantir/witchcraft-go-tracing v1.41.0 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
