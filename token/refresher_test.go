@@ -42,15 +42,11 @@ func TestRefresher_Run(t *testing.T) {
 	defer cancel()
 
 	var wg sync.WaitGroup
-	wg.Add(1)
-	go func() {
-		defer wg.Done()
+	wg.Go(func() {
 		refresher.Run(ctx)
-	}()
+	})
 
-	wg.Add(1)
-	go func() {
-		defer wg.Done()
+	wg.Go(func() {
 		assert.NoError(t, retry.Do(ctx, func() error {
 			token, err := refresher.Token(context.Background())
 			if token != "foo" {
@@ -62,7 +58,7 @@ func TestRefresher_Run(t *testing.T) {
 			return nil
 		}, retry.WithMaxBackoff(10*time.Millisecond), retry.WithMaxAttempts(3)))
 		cancel()
-	}()
+	})
 
 	// Wait for refresher to stop after verifying refreshed token.
 	wg.Wait()
@@ -88,11 +84,9 @@ func TestRefresher_RunFailsAfterSucceeding(t *testing.T) {
 	defer cancel()
 
 	var wg sync.WaitGroup
-	wg.Add(1)
-	go func() {
-		defer wg.Done()
+	wg.Go(func() {
 		refresher.Run(ctx)
-	}()
+	})
 
 	// Sleep up until before the refresh attempt, which occurs at 1/2 * ttl
 	time.Sleep(ttl / 4)
@@ -139,11 +133,9 @@ func TestRefresher_RunSucceedsAfterFailing(t *testing.T) {
 	defer cancel()
 
 	var wg sync.WaitGroup
-	wg.Add(1)
-	go func() {
-		defer wg.Done()
+	wg.Go(func() {
 		refresher.Run(ctx)
-	}()
+	})
 
 	// Sleep to allow at least one failed token attempt
 	time.Sleep(ttl / 4)

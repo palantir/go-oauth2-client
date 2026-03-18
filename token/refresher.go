@@ -74,7 +74,7 @@ func (r *Refresher) Token(ctx context.Context) (string, error) {
 	//     * the stored token is expired
 	//         * the last n attempts to get the token have all failed
 	//         * there have been no completed attempts since the last success
-	errorParam := werror.SafeParams(map[string]interface{}{
+	errorParam := werror.SafeParams(map[string]any{
 		"tokenAcquiredTime": r.tokenData.tokenAcquiredTime,
 		"tokenTTL":          r.tokenTTL,
 	})

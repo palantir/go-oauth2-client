@@ -120,12 +120,12 @@ type oauth2Error struct {
 	ErrorURI         string `json:"error_uri"`
 }
 
-func (e oauth2Error) SafeParams() map[string]interface{} {
-	return map[string]interface{}{"oauthError": e.ErrorType}
+func (e oauth2Error) SafeParams() map[string]any {
+	return map[string]any{"oauthError": e.ErrorType}
 }
 
-func (e oauth2Error) UnsafeParams() map[string]interface{} {
-	m := map[string]interface{}{}
+func (e oauth2Error) UnsafeParams() map[string]any {
+	m := map[string]any{}
 	if e.ErrorDescription != "" {
 		m["oauthErrorDescription"] = e.ErrorDescription
 	}
