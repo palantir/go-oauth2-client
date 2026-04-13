@@ -31,10 +31,10 @@ type Provider = httpclient.TokenProvider
 
 // CreateAndStartRefreshingOAuthProvider returns a Provider which caches and periodically refreshes a client token.
 // When it returns, we have not yet necessarily successfully fetched a valid token.
-func CreateAndStartRefreshingOAuthProvider(ctx context.Context, client oauth.ClientCredentialClient, clientID, clientSecret string, refreshInterval time.Duration) Provider {
+func CreateAndStartRefreshingOAuthProvider(ctx context.Context, client oauth.ClientCredentialClient, clientID, clientSecret string, tokenTTL time.Duration) Provider {
 	refresher := NewRefresher(func(ctx context.Context) (string, error) {
 		return client.CreateClientCredentialToken(ctx, clientID, clientSecret)
-	}, refreshInterval)
+	}, tokenTTL)
 	go refresher.Run(ctx)
 	return refresher.Token
 }
