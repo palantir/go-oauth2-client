@@ -29,7 +29,7 @@ import (
 type Refresher struct {
 	provideToken Provider
 	tokenData    tokenData
-	// tokenDataInitialized represents whether a token has ever been acquired, with or without error by being a closed channel.
+	// tokenDataInitialized represents whether a token has been successfully acquired by being a closed channel.
 	tokenDataInitialized chan struct{}
 	tokenTTL             time.Duration
 	tokenDataLock        sync.RWMutex
@@ -59,7 +59,7 @@ func NewRefresher(provideToken Provider, tokenTTL time.Duration) *Refresher {
 }
 
 // Token returns the currently stored token or an error if (1) there is no token stored and an attempt to get the token has failed, or (2) the stored token is not usable.
-// This method will block until an attempt is completed to the provider to get the token (either success or fail).
+// This method will block until a token has been successfully acquired from the provider, or the provided context is cancelled.
 func (r *Refresher) Token(ctx context.Context) (string, error) {
 	if err := r.waitForInitialized(ctx); err != nil {
 		return "", err
@@ -138,6 +138,12 @@ func (r *Refresher) updateToken(token string, err error) {
 			tokenAcquiredTime: time.Now(),
 			tokenAcquireError: nil,
 		}
+		// close channel on first successful token acquisition
+		select {
+		case <-r.tokenDataInitialized:
+		default:
+			close(r.tokenDataInitialized)
+		}
 	} else {
 		newTokenData = tokenData{
 			token:             r.tokenData.token,
@@ -146,10 +152,4 @@ func (r *Refresher) updateToken(token string, err error) {
 		}
 	}
 	r.tokenData = newTokenData
-	// close channel if it is not already closed
-	select {
-	case <-r.tokenDataInitialized:
-	default:
-		close(r.tokenDataInitialized)
-	}
 }
