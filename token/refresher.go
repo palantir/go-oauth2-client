@@ -137,10 +137,10 @@ func (r *Refresher) waitForInitialized(ctx context.Context) error {
 		r.tokenDataLock.RUnlock()
 		params := werror.SafeParam("initTimeout", r.initTimeout.String())
 		if lastErr != nil {
-			return werror.Wrap(lastErr, "timed out waiting for initial token acquisition",
+			return werror.WrapWithContextParams(waitCtx, lastErr, "timed out waiting for initial token acquisition",
 				werror.SafeParam("ctxErr", waitCtx.Err().Error()), params)
 		}
-		return werror.Wrap(waitCtx.Err(), "timed out waiting for initial token acquisition", params)
+		return werror.WrapWithContextParams(waitCtx, waitCtx.Err(), "timed out waiting for initial token acquisition", params)
 	case <-r.tokenDataInitialized:
 		return nil
 	}
