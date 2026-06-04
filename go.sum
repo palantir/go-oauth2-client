@@ -57,8 +57,8 @@ github.com/palantir/witchcraft-go-logging v1.68.0 h1:aa9eUAzW1c9Dk7mVFXUDPRZuq9s
 github.com/palantir/witchcraft-go-logging v1.68.0/go.mod h1:rhhYPWIwueq3xF7yANA5dkyZk3R4NqJ91gqfl/IOBB4=
 github.com/palantir/witchcraft-go-params v1.41.0 h1:kN+8McJpAxO94YFeOXPn4gEfTDi6mtEwCAoxMv13MQQ=
 github.com/palantir/witchcraft-go-params v1.41.0/go.mod h1:/Jel4PARd1KSOGsDKtLUemEhtshRTyJYrHxYj2fMQQo=
-github.com/palantir/witchcraft-go-tracing v1.43.0 h1:P3cLxg1MZOSnRhjwvaiD4aJ8CDHxcwHq2TJh+nz97pU=
-github.com/palantir/witchcraft-go-tracing v1.43.0/go.mod h1:AHDhCve6fRydjwprY3p9PF3R0TP2VcDrCpRQu8FnOBA=
+github.com/palantir/witchcraft-go-tracing v1.44.0 h1:h/keSmSiL8vtjcyI322jNQn6LnPApgmAID98NxVv/dg=
+github.com/palantir/witchcraft-go-tracing v1.44.0/go.mod h1:2LGL1LEqdHy3s/oylMzNMjo90PFi62VPfO0P1NljrmI=
 github.com/pkg/errors v0.9.1 h1:FEBLx1zS214owpjy7qsBeixbURkuhQAwrK5UwLGTwt4=
 github.com/pkg/errors v0.9.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
