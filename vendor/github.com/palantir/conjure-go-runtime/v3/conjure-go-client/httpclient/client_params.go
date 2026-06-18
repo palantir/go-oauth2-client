@@ -23,6 +23,7 @@ import (
 
 	"github.com/palantir/conjure-go-runtime/v3/conjure-go-client/httpclient/internal"
 	"github.com/palantir/conjure-go-runtime/v3/conjure-go-client/httpclient/internal/refreshingclient"
+	"github.com/palantir/conjure-go-runtime/v3/conjure-go-contract/errors"
 	"github.com/palantir/pkg/bytesbuffers"
 	"github.com/palantir/pkg/refreshable/v2"
 	werror "github.com/palantir/witchcraft-go-error"
@@ -173,6 +174,12 @@ func WithAuthTokenProvider(provideToken TokenProvider) ClientOrHTTPClientParam {
 // WithUserAgent sets the User-Agent header.
 func WithUserAgent(userAgent string) ClientOrHTTPClientParam {
 	return WithSetHeader("User-Agent", userAgent)
+}
+
+// WithConjureErrorParameterFormat sets the "Accept-Conjure-Error-Parameter-Format" header on
+// every request so that conjure servers serialize error parameters in the requested format.
+func WithConjureErrorParameterFormat(format errors.ConjureErrorParameterFormat) ClientOrHTTPClientParam {
+	return WithSetHeader(errors.AcceptConjureErrorParameterFormatHeader, string(format))
 }
 
 // WithOverrideRequestHost overrides the request Host from the default URL.Host
@@ -623,7 +630,7 @@ func WithErrorDecoder(errorDecoder ErrorDecoder) ClientParam {
 // password.
 func WithBasicAuth(user, password string) ClientOrHTTPClientParam {
 	return WithInnerMiddleware(MiddlewareFunc(func(req *http.Request, next http.RoundTripper) (*http.Response, error) {
-		setBasicAuth(req.Header, user, password)
+		setBasicAuth(req, user, password)
 		return next.RoundTrip(req)
 	}))
 }
@@ -636,7 +643,7 @@ func WithBasicAuthProvider(provider BasicAuthProvider) ClientOrHTTPClientParam {
 		if err != nil {
 			return nil, err
 		}
-		setBasicAuth(req.Header, basicAuth.User, basicAuth.Password)
+		setBasicAuth(req, basicAuth.User, basicAuth.Password)
 		return next.RoundTrip(req)
 	}))
 }
@@ -652,7 +659,7 @@ func WithBasicAuthOptionalProvider(provider BasicAuthOptionalProvider) ClientOrH
 			return nil, err
 		}
 		if basicAuth != nil {
-			setBasicAuth(req.Header, basicAuth.User, basicAuth.Password)
+			setBasicAuth(req, basicAuth.User, basicAuth.Password)
 		}
 		return next.RoundTrip(req)
 	}))
