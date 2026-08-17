@@ -10,11 +10,10 @@ require (
 	github.com/palantir/witchcraft-go-error v1.47.0
 	github.com/palantir/witchcraft-go-logging v1.70.0
 	github.com/palantir/witchcraft-go-params v1.44.0
-	github.com/stretchr/testify v1.11.1
+	github.com/stretchr/testify v1.12.0
 )
 
 require (
-	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/golang/snappy v1.0.0 // indirect
 	github.com/kr/text v0.2.0 // indirect
 	github.com/palantir/go-metrics v1.1.1 // indirect
@@ -27,7 +26,6 @@ require (
 	github.com/palantir/pkg/uuid v1.3.0 // indirect
 	github.com/palantir/witchcraft-go-tracing v1.46.0 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
-	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/rogpeppe/go-internal v1.16.0 // indirect
 	golang.org/x/net v0.58.0 // indirect
 	golang.org/x/text v0.41.0 // indirect
