@@ -5,7 +5,7 @@ go 1.26.0
 toolchain go1.26.5
 
 require (
-	github.com/palantir/conjure-go-runtime/v3 v3.22.0
+	github.com/palantir/conjure-go-runtime/v3 v3.23.0
 	github.com/palantir/pkg/retry v1.3.0
 	github.com/palantir/witchcraft-go-error v1.47.0
 	github.com/palantir/witchcraft-go-logging v1.70.0
