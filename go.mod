@@ -2,7 +2,7 @@ module github.com/palantir/go-oauth2-client/v3
 
 go 1.26.0
 
-toolchain go1.26.5
+toolchain go1.26.7
 
 require (
 	github.com/palantir/conjure-go-runtime/v3 v3.24.0
