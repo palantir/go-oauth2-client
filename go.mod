@@ -24,7 +24,7 @@ require (
 	github.com/palantir/pkg/safejson v1.3.0 // indirect
 	github.com/palantir/pkg/tlsconfig v1.5.0 // indirect
 	github.com/palantir/pkg/uuid v1.3.0 // indirect
-	github.com/palantir/witchcraft-go-tracing v1.47.0 // indirect
+	github.com/palantir/witchcraft-go-tracing v1.48.0 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/rogpeppe/go-internal v1.16.0 // indirect
 	go.yaml.in/yaml/v3 v3.0.5 // indirect
