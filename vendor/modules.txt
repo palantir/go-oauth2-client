@@ -3,7 +3,7 @@
 github.com/golang/snappy
 # github.com/kr/text v0.2.0
 ## explicit
-# github.com/palantir/conjure-go-runtime/v3 v3.29.0
+# github.com/palantir/conjure-go-runtime/v3 v3.30.0
 ## explicit; go 1.27.0
 github.com/palantir/conjure-go-runtime/v3/conjure-go-client/httpclient
 github.com/palantir/conjure-go-runtime/v3/conjure-go-client/httpclient/internal
@@ -71,6 +71,11 @@ github.com/stretchr/testify/require
 # go.yaml.in/yaml/v3 v3.0.5
 ## explicit; go 1.16
 go.yaml.in/yaml/v3
+# golang.org/x/mod v0.41.0
+## explicit; go 1.26.0
+golang.org/x/mod/internal/lazyregexp
+golang.org/x/mod/module
+golang.org/x/mod/semver
 # golang.org/x/net v0.59.0
 ## explicit; go 1.26.0
 golang.org/x/net/http/httpguts
