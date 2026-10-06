@@ -5,7 +5,7 @@ go 1.27.0
 toolchain go1.27.1
 
 require (
-	github.com/palantir/conjure-go-runtime/v3 v3.29.0
+	github.com/palantir/conjure-go-runtime/v3 v3.30.0
 	github.com/palantir/pkg/retry v1.3.0
 	github.com/palantir/witchcraft-go-error v1.50.0
 	github.com/palantir/witchcraft-go-logging v1.74.0
@@ -28,6 +28,7 @@ require (
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/rogpeppe/go-internal v1.16.0 // indirect
 	go.yaml.in/yaml/v3 v3.0.5 // indirect
+	golang.org/x/mod v0.41.0 // indirect
 	golang.org/x/net v0.59.0 // indirect
 	golang.org/x/text v0.42.0 // indirect
 	google.golang.org/protobuf v1.36.12 // indirect
