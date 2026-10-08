@@ -24,15 +24,33 @@ import (
 	"github.com/palantir/witchcraft-go-logging/wlog/svclog/svc1log"
 )
 
+// defaultInitTimeout is the maximum time Token() will block waiting for the first successful
+// token acquisition when the caller's context has no earlier deadline. Callers may override
+// this with WithInitTimeout.
+const defaultInitTimeout = 60 * time.Second
+
 // Refresher periodically updates its token via its Provider.
 // This type provides thread-safe access to an up-to-date token.
 type Refresher struct {
 	provideToken Provider
 	tokenData    tokenData
-	// tokenDataInitialized represents whether a token has ever been acquired, with or without error by being a closed channel.
+	// tokenDataInitialized represents whether a token has been successfully acquired by being a closed channel.
 	tokenDataInitialized chan struct{}
 	tokenTTL             time.Duration
+	initTimeout          time.Duration
 	tokenDataLock        sync.RWMutex
+}
+
+// RefresherOption configures a Refresher at construction time.
+type RefresherOption func(*Refresher)
+
+// WithInitTimeout overrides the maximum time Token() will block waiting for the first
+// successful token acquisition. Only applies until the first success; subsequent calls to
+// Token() return immediately with the currently stored value.
+func WithInitTimeout(d time.Duration) RefresherOption {
+	return func(r *Refresher) {
+		r.initTimeout = d
+	}
 }
 
 type tokenData struct {
@@ -45,8 +63,8 @@ type tokenData struct {
 }
 
 // NewRefresher constructs a Refresher from a Provider and a token's TTL.
-func NewRefresher(provideToken Provider, tokenTTL time.Duration) *Refresher {
-	return &Refresher{
+func NewRefresher(provideToken Provider, tokenTTL time.Duration, opts ...RefresherOption) *Refresher {
+	r := &Refresher{
 		provideToken: provideToken,
 		tokenData: tokenData{
 			token:             "",
@@ -55,11 +73,21 @@ func NewRefresher(provideToken Provider, tokenTTL time.Duration) *Refresher {
 		},
 		tokenDataInitialized: make(chan struct{}),
 		tokenTTL:             tokenTTL,
+		initTimeout:          defaultInitTimeout,
 	}
+	for _, opt := range opts {
+		opt(r)
+	}
+	return r
 }
 
-// Token returns the currently stored token or an error if (1) there is no token stored and an attempt to get the token has failed, or (2) the stored token is not usable.
-// This method will block until an attempt is completed to the provider to get the token (either success or fail).
+// Token returns the currently stored token or an error if (1) no token has been successfully
+// acquired before the initialization timeout elapses or the caller's context is cancelled, or
+// (2) the stored token is expired and no newer token has been acquired.
+// Prior to the first successful acquisition, this method blocks until either a token is
+// acquired, the caller's context is cancelled, or the initialization timeout (see
+// WithInitTimeout, default 60s) elapses. Once a token has been acquired, this method returns
+// immediately with the currently stored value.
 func (r *Refresher) Token(ctx context.Context) (string, error) {
 	if err := r.waitForInitialized(ctx); err != nil {
 		return "", err
@@ -92,9 +120,27 @@ func (r *Refresher) Token(ctx context.Context) (string, error) {
 }
 
 func (r *Refresher) waitForInitialized(ctx context.Context) error {
+	// Fast path: avoid creating a timer if initialization has already completed.
 	select {
-	case <-ctx.Done():
-		return werror.Wrap(ctx.Err(), "context completed while waiting for initialized")
+	case <-r.tokenDataInitialized:
+		return nil
+	default:
+	}
+
+	waitCtx, cancel := context.WithTimeout(ctx, r.initTimeout)
+	defer cancel()
+
+	select {
+	case <-waitCtx.Done():
+		r.tokenDataLock.RLock()
+		lastErr := r.tokenData.tokenAcquireError
+		r.tokenDataLock.RUnlock()
+		params := werror.SafeParam("initTimeout", r.initTimeout.String())
+		if lastErr != nil {
+			return werror.WrapWithContextParams(waitCtx, lastErr, "timed out waiting for initial token acquisition",
+				werror.SafeParam("ctxErr", waitCtx.Err().Error()), params)
+		}
+		return werror.WrapWithContextParams(waitCtx, waitCtx.Err(), "timed out waiting for initial token acquisition", params)
 	case <-r.tokenDataInitialized:
 		return nil
 	}
@@ -138,6 +184,12 @@ func (r *Refresher) updateToken(token string, err error) {
 			tokenAcquiredTime: time.Now(),
 			tokenAcquireError: nil,
 		}
+		// close channel on first successful token acquisition
+		select {
+		case <-r.tokenDataInitialized:
+		default:
+			close(r.tokenDataInitialized)
+		}
 	} else {
 		newTokenData = tokenData{
 			token:             r.tokenData.token,
@@ -146,10 +198,4 @@ func (r *Refresher) updateToken(token string, err error) {
 		}
 	}
 	r.tokenData = newTokenData
-	// close channel if it is not already closed
-	select {
-	case <-r.tokenDataInitialized:
-	default:
-		close(r.tokenDataInitialized)
-	}
 }
